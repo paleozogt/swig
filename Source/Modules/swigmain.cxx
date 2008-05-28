@@ -50,6 +50,7 @@ extern "C" {
   Language *swig_uffi(void);
   Language *swig_r(void);
   Language *swig_scilab(void);
+  Language *swig_c(void);
   Language *swig_go(void);
   Language *swig_d(void);
   Language *swig_javascript(void);
@@ -67,6 +68,7 @@ struct swig_module {
 
 static swig_module modules[] = {
   {"-allegrocl", swig_allegrocl, "ALLEGROCL"},
+  {"-c", swig_c, "C"},
   {"-chicken", swig_chicken, "CHICKEN"},
   {"-clisp", swig_clisp, "CLISP"},
   {"-cffi", swig_cffi, "CFFI"},
