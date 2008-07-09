@@ -80,6 +80,7 @@ skip-cffi	= test -n "@SKIP_CFFI@"
 skip-uffi	= test -n "@SKIP_UFFI@"
 skip-r		= test -n "@SKIP_R@"
 skip-scilab     = test -n "@SKIP_SCILAB@"
+skip-c		= test -n "@SKIP_C@"
 skip-go		= test -n "@SKIP_GO@"
 skip-d		= test -n "@SKIP_D@"
 skip-javascript	= test -n "@SKIP_JAVASCRIPT@"
@@ -129,6 +130,7 @@ check-aliveness:
 	@$(skip-lua)      || ./$(TARGET) -lua        -help
 	@$(skip-r) 	  || ./$(TARGET) -r          -help
 	@$(skip-scilab)   || ./$(TARGET) -scilab     -help
+	@$(skip-c)        || ./$(TARGET) -c          -help
 	@$(skip-go)	  || ./$(TARGET) -go         -help
 	@$(skip-d) 	  || ./$(TARGET) -d          -help
 	@$(skip-javascript) || ./$(TARGET) -javascript -help
@@ -201,6 +203,7 @@ check-examples:					\
 	check-cffi-examples			\
 	check-r-examples			\
 	check-scilab-examples			\
+	check-c-examples			\
 	check-go-examples			\
 	check-d-examples			\
 	check-javascript-examples
@@ -227,6 +230,7 @@ uffi_examples      :=
 cffi_examples      :=
 r_examples         :=$(shell sed '/^\#/d' $(srcdir)/Examples/r/check.list)
 scilab_examples    :=$(shell sed '/^\#/d' $(srcdir)/Examples/scilab/check.list)
+c_examples         :=$(shell sed '/^\#/d' $(srcdir)/Examples/c/check.list)
 go_examples        :=$(shell sed '/^\#/d' $(srcdir)/Examples/go/check.list)
 d_examples         :=$(shell sed '/^\#/d' $(srcdir)/Examples/d/check.list)
 javascript_examples:=$(shell sed '/^\#/d' $(srcdir)/Examples/javascript/check.list)
@@ -285,6 +289,7 @@ check-test-suite:				\
 	check-chicken-test-suite		\
 	check-r-test-suite			\
 	check-scilab-test-suite			\
+	check-c-test-suite				\
 	check-go-test-suite			\
 	check-d-test-suite			\
 	check-javascript-test-suite
@@ -339,6 +344,7 @@ all-test-suite:					\
 	all-chicken-test-suite			\
 	all-r-test-suite			\
 	all-scilab-test-suite   		\
+	all-c-test-suite			\
 	all-go-test-suite			\
 	all-d-test-suite			\
 	all-javascript-test-suite
@@ -369,6 +375,7 @@ broken-test-suite:				\
 	broken-chicken-test-suite		\
 	broken-r-test-suite			\
 	broken-scilab-test-suite           	\
+	broken-c-test-suite				\
 	broken-go-test-suite			\
 	broken-d-test-suite			\
 	broken-javascript-test-suite
@@ -503,7 +510,7 @@ install-main:
 	@$(INSTALL_PROGRAM) $(TARGET) $(DESTDIR)$(BIN_DIR)/`echo $(TARGET_NOEXE) | sed '$(transform)'`@EXEEXT@
 
 lib-languages = gcj typemaps tcl perl5 python guile java mzscheme ruby php ocaml octave \
-	pike chicken csharp modula3 allegrocl clisp lua cffi uffi r go d javascript javascript/jsc \
+	pike chicken csharp modula3 allegrocl clisp lua cffi uffi r c go d javascript javascript/jsc \
 	javascript/v8 scilab
 
 lib-modules = std

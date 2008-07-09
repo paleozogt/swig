@@ -2833,6 +2833,12 @@ if test -z "$SCILAB"; then
 fi
 AC_SUBST(SKIP_SCILAB)
 
+SKIP_C=
+if test -x "$(CC)" || test -z "$(CXX)" ; then
+  SKIP_C="1"
+fi
+AC_SUBST(SKIP_C)
+
 SKIP_GO=
 if test -z "$GO" ; then
     SKIP_GO="1"
@@ -2966,6 +2972,7 @@ AC_CONFIG_FILES([
     Examples/test-suite/cffi/Makefile
     Examples/test-suite/uffi/Makefile
     Examples/test-suite/r/Makefile
+    Examples/test-suite/c/Makefile    \
     Examples/test-suite/go/Makefile
     Source/Makefile
     Tools/javascript/Makefile
