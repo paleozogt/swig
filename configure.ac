@@ -2833,10 +2833,10 @@ if test -z "$SCILAB"; then
 fi
 AC_SUBST(SKIP_SCILAB)
 
-SKIP_C=
-if test -x "$(CC)" || test -z "$(CXX)" ; then
-  SKIP_C="1"
-fi
+SKIP_C=""
+#if test -x "$(CC)" || test -z "$(CXX)" ; then
+#  SKIP_C="1"
+#fi
 AC_SUBST(SKIP_C)
 
 SKIP_GO=
