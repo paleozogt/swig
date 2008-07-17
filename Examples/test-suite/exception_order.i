@@ -58,7 +58,7 @@
  */
 #if defined(SWIGC)
 %typemap(throws) SWIGTYPE {
-  SwigObj$1_basetype *_c_ex = _wrap_new_$1_basetype();
+  SwigObj *_c_ex = _wrap_new_$1_basetype();
   SWIG_CThrowException(_c_ex, "C++ $1_type exception thrown");
 }
 
