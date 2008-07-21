@@ -60,7 +60,6 @@ static void replace_embedded_typemap(String *s, ParmList *parm_sublist, Wrapper 
  * ----------------------------------------------------------------------------- */
 
 static Hash *typemaps;
-static int class_distinguish = 0;
 
 static Hash *get_typemap(const SwigType *type) {
   Hash *tm = 0;
@@ -651,10 +650,6 @@ ret_result:
   return result;
 }
 
-void Swig_typemap_class_distinguish(int b) {
-  class_distinguish = b;
-}
-
 /* -----------------------------------------------------------------------------
  * typemap_search()
  *
@@ -675,21 +670,6 @@ static Hash *typemap_search(const_String_or_char_ptr tmap_method, SwigType *type
   const String *cqualifiedname = 0;
   String *tm_method = typemap_method_name(tmap_method);
   int debug_display = (in_typemap_search_multi == 0) && typemap_search_debug;
-  SwigType *base = 0;
-  int isbuiltin = 0;
-
-  /* 
-   * HACK:
-   * try to distinguish between built-in types (int, char, etc.) and defined classes
-   * this allows C module to use different typemaps for classes
-   */
-  
-  if (class_distinguish) {
-    base = SwigType_base(type);
-    isbuiltin = SwigType_isbuiltin(base);
-    if (!isbuiltin)
-      Replaceall(type, base, "SWIGCLASSTYPE");
-  }
 
   if ((name) && Len(name))
     cname = name;
@@ -761,23 +741,12 @@ static Hash *typemap_search(const_String_or_char_ptr tmap_method, SwigType *type
 
   primitive = SwigType_default_create(type);
   while (primitive) {
-  
-    if (class_distinguish) {
-      if (!isbuiltin) {
-        Replaceall(primitive, "SWIGTYPE", "SWIGCLASSTYPE");
-        /*Printf(stdout, "Swig_typemap_search: new type is %s\n", primitive);*/
-      }
-    }  
-  
     tm = get_typemap(primitive);
     result = typemap_search_helper(debug_display, tm, tm_method, primitive, cqualifiedname, cname, &backup);
     if (result && Getattr(result, "code"))
       goto ret_result;
 
     {
-      if (class_distinguish)
-        Replaceall(primitive, "SWIGCLASSTYPE", "SWIGTYPE");    
-    
       SwigType *nprim = SwigType_default_deduce(primitive);
       Delete(primitive);
       primitive = nprim;
@@ -790,10 +759,6 @@ static Hash *typemap_search(const_String_or_char_ptr tmap_method, SwigType *type
   result = backup;
 
 ret_result:
-  if (class_distinguish) {
-    Replaceall(type, "SWIGCLASSTYPE", base);
-    Replaceall(primitive, "SWIGCLASSTYPE", base);
-  }
   Delete(primitive);
   if (matchtype)
     *matchtype = Copy(ctype);
