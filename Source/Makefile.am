@@ -57,7 +57,7 @@ eswig_SOURCES =	CParse/cscanner.c		\
 		Modules/module.cxx		\
 		Modules/mzscheme.cxx		\
 		Modules/nested.cxx  \
-		Modules/objectivec.cxx		\
+		Modules/objc.cxx		\
 		Modules/ocaml.cxx		\
 		Modules/octave.cxx		\
 		Modules/overload.cxx		\
