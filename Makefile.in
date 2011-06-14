@@ -117,7 +117,6 @@ check-aliveness:
 	@$(skip-guile)    || ./$(TARGET) -guile      -help
 	@$(skip-mzscheme) || ./$(TARGET) -mzscheme   -help
 	@$(skip-ruby)     || ./$(TARGET) -ruby       -help
-	@$(skip-objc)     || ./$(TARGET) -objc     -help
 	@$(skip-ocaml)    || ./$(TARGET) -ocaml      -help
 	@$(skip-octave)   || ./$(TARGET) -octave     -help
 	@$(skip-php)      || ./$(TARGET) -php7       -help
@@ -136,7 +135,7 @@ check-aliveness:
 	@$(skip-go)	  || ./$(TARGET) -go         -help
 	@$(skip-d) 	  || ./$(TARGET) -d          -help
 	@$(skip-javascript) || ./$(TARGET) -javascript -help
-
+	@$(skip-objc) 	  || ./$(TARGET) -objc       -help
 
 check-ccache:
 	test -z "$(ENABLE_CCACHE)" || (cd $(CCACHE) && $(MAKE) check)
