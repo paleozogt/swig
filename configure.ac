@@ -1267,16 +1267,19 @@ fi
 # linking options
 case $host in
 *-*-darwin*) 
-        OBJCDYNAMICLINKING="-dynamiclib -framework Foundation"
+        OBJCDYNAMICLINKING="-dynamiclib"
+	OBJCLIBS="-framework Foundation"
         OBJCCFLAGS=""
         ;;
 *-*-linux*) 
 	OBJCDYNAMICLINKING="$OBJCLIB"
+	OBJCLIBS="$OBJCLIB"
         OBJCCFLAGS="-fconstant-string-class=NSConstantString"  #To avoid crytpic NXConstantString error with GNUStep...!
         ;;
 *)
         OBJCDYNAMICLINKING=""
         OBJCCFLAGS=""
+	OBJCLIBS=""
         ;;
 esac
 
@@ -1305,6 +1308,7 @@ fi
 
 AC_SUBST(OBJCINC)
 AC_SUBST(OBJCDYNAMICLINKING)
+AC_SUBST(OBJCLIBS)
 AC_SUBST(OBJCLIBRARYPREFIX)
 AC_SUBST(OBJCCFLAGS)
 AC_SUBST(OBJC)
