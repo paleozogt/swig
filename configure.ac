@@ -2476,9 +2476,9 @@ case $host in
         C_SO=".dylib"
         ;;
 *)
-        C_LDSHARED=$(LDSHARED)
-        CXX_LDSHARED="$(CXXSHARED)"
-        C_SO=$(SO)
+        C_LDSHARED='$(LDSHARED)'
+        CXX_LDSHARED='$(CXXSHARED)'
+        C_SO='$(SO)'
         ;;
 esac
 
