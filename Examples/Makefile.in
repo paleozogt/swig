@@ -82,9 +82,10 @@ RUNPIPE=
 RUNME = runme
 
 IWRAP      = $(INTERFACE:.i=_wrap.i)
+IPROXYSRCS = $(INTERFACE:.i=_proxy.c)
 ISRCS      = $(IWRAP:.i=.c)
 ICXXSRCS   = $(IWRAP:.i=.cxx)
-IOBJS      = $(IWRAP:.i=.@OBJEXT@)
+IOBJS      = $(IWRAP:.i=.o) $(IPROXYSRCS:.c:.o)
 
 ##################################################################
 # Some options for silent output
@@ -1790,11 +1791,13 @@ C_SO = @C_SO@
 c: $(SRCS)
 	$(SWIG) -c $(SWIGOPT) $(INTERFACEPATH)
 	$(CC) -c $(CCSHARED) $(CFLAGS) $(ISRCS) $(SRCS) $(INCLUDES)
+	$(CC) -c $(CCSHARED) $(CFLAGS) $(IPROXYSRCS) $(INCLUDES)
 	$(C_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(LIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
 	
 c_cpp: $(SRCS)
 	$(SWIG) -c++ -c $(SWIGOPT) $(INTERFACEPATH)
 	$(CXX) -c $(CCSHARED) $(CXXFLAGS) $(ICXXSRCS) $(SRCS) $(CXXSRCS) $(INCLUDES)
+	$(CC) -c $(CCSHARED) $(CFLAGS) $(IPROXYSRCS) $(INCLUDES)
 	$(CXX_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(LIBS) $(CPP_DLLIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
 
 c_compile: $(RUNME) $(PROXY)
