@@ -24,21 +24,12 @@ class string;
 
 %typemap(in) string 
 %{ if(!$input) {
-	NSException* anException = [NSException exceptionWithName:@"NullPointerException" 
-	reason:@"null std::string" userInfo:nil];
-	@throw anException;
-    } 
-    int length = [$input length];
-    int bufferSize = sizeof(char) * (length + 1);
-    char *buffer = (char*)malloc(bufferSize);
-    memset(buffer, 0, bufferSize);
-    int i = 0;
-    for (; i < length; ++i)
-        buffer[i] = [$input characterAtIndex: i];
-
-    const char *$1_pstr = (const char *)buffer; 
-    $1.assign($1_pstr);
-    free(buffer); %}
+      NSException* anException = [NSException exceptionWithName:@"NullPointerException" 
+      reason:@"null std::string" userInfo:nil];
+      @throw anException;
+   }
+   $1 = [$input UTF8String];    
+%}
 
 %typemap(out) string 
 %{ $result = [NSString stringWithUTF8String: $1.c_str()]; %}
@@ -53,24 +44,15 @@ class string;
 %typemap(imtype) const string & "NSString*"
 %typemap(objctype) const string & "NSString*"
 
-%typemap(in) const string &
+%typemap(in) const string & (std::string temp)
 %{ if(!$input) {
-	NSException* anException = [NSException exceptionWithName:@"NullPointerException" 
-	reason:@"null std::string" userInfo:nil];
-	@throw anException;
+      NSException* anException = [NSException exceptionWithName:@"NullPointerException" 
+      reason:@"null std::string" userInfo:nil];
+      @throw anException;
    }
-   int length = [$input length];
-   int bufferSize = sizeof(char) * (length + 1);
-   char *buffer = (char*)malloc(bufferSize);
-   memset(buffer, 0, bufferSize);
-   int i = 0;
-   for (; i < length; ++i)
-       buffer[i] = [$input characterAtIndex: i];
-
-   const char *$1_pstr = (const char *)buffer; 
-   std::string $1_str($1_pstr);
-   $1 = &$1_str;
-   free(buffer); %}
+   $1 = &temp;   
+   *$1 = [$input UTF8String];   
+%}
 
 %typemap(out) const string & 
 %{ $result = [NSString stringWithUTF8String: $1->c_str()]; %}
