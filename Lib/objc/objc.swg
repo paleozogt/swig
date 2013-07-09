@@ -150,34 +150,8 @@
 
 
 //C strings:
-%typemap(in) char *, char[ANY], char[]  {
- $1 = 0;
-  if ($input) { // TODO: Find a better way to do this!
-		int length = [$input length];
-		int bufferSize = sizeof(char) * (length + 1);
-		char *buffer = (char*)malloc(bufferSize);
-		memset(buffer, 0, bufferSize);
-		int i = 0;
-		for (; i < length; ++i)
-			buffer[i] = [$input characterAtIndex: i];
-			$1 = ($1_ltype)buffer;
-	}
-}
-
-%typemap(in) char *& ($*1_ltype temp = 0) {
- $1 = 0;
-  if ($input) { // TODO: Find a better way to do this!
-		int length = [$input length];
-		int bufferSize = sizeof(char) * (length + 1);
-		char *buffer = (char*)malloc(bufferSize);
-		memset(buffer, 0, bufferSize);
-		int i = 0;
-		for (; i < length; ++i)
-			buffer[i] = [$input characterAtIndex: i];
-    temp = ($*1_ltype)buffer;
-    if (!temp) return NULL;
-  }
-  $1 = &temp;
+%typemap(in) char *, char *&, char[ANY], char[]  {
+ $1 = ($1_ltype)[$input UTF8String];
 }
 
 // Objects passed by value: convert from a pointer to the C++ value object.
