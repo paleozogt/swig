@@ -17,6 +17,7 @@ private:
   String *wrap_h_code;		// Code to be written in wrap_h.
   String *wrap_mm_code;		// Code to be written in wrap_mm.
   String *proxy_h_code;		// Code to be written in proxy_h.
+  String *proxy_h_prefix_code; // Forward declarations in proxy_h.
   String *proxy_mm_code;	// Code to be written in proxy_mm.
   String *swigtypes_h_code;	// Code for Objective-C typewrapper classes header.
   String *swigtypes_mm_code;	// Code for Objective-C typewrapper classes implementation.
@@ -49,6 +50,7 @@ private:
   String *proxy_class_qname;	// The name of the current proxy class, qualified with the name of the namespace it is in, if any.
   // TODO: Add this when nspaces are handled. Not now!
 
+  String *proxy_class_fwd_decl_code;// The proxy class forward declaration code. This goes in the proxy_h file if proxy_flag is true.
   String *proxy_class_decl_code;	// The proxy class declaration code.This goes in the proxy_h file if proxy_flag is true.
   String *proxy_class_defn_code;	// The proxy class definition code.This goes in the proxy_mm file if proxy_flag is true.
   String *proxy_class_imports;	// The import directives for the current proxy class. This goes in the proxy_h file if proxy_flag is true.
@@ -86,6 +88,7 @@ public:
       wrap_h_code(NULL),
       wrap_mm_code(NULL),
       proxy_h_code(NULL),
+      proxy_h_prefix_code(NULL),
       proxy_mm_code(NULL),
       swigtypes_h_code(NULL),
       swigtypes_mm_code(NULL),
@@ -103,6 +106,7 @@ public:
       proxyfuncname(NULL),
       proxy_class_name(NULL),
       proxy_class_qname(NULL),
+      proxy_class_fwd_decl_code(NULL),
       proxy_class_decl_code(NULL),
       proxy_class_defn_code(NULL),
       proxy_class_imports(NULL),
@@ -286,11 +290,13 @@ int OBJECTIVEC::top(Node *n) {
   wrap_h_code = NewString("");
   wrap_mm_code = NewString("");
   if (proxy_flag) {
+    proxy_h_prefix_code = NewString("/* forward declarations */\n");
     proxy_h_code = NewString("");
     proxy_mm_code = NewString("");
-    swigtypes_h_code = NewString("");
+    swigtypes_h_code = NewString("\n");
     swigtypes_mm_code = NewString("");
 
+    proxy_class_fwd_decl_code = NewString("");
     proxy_class_decl_code = NewString("");
     proxy_class_defn_code = NewString("");
     proxy_class_enums_code = NewString("");
@@ -334,6 +340,7 @@ int OBJECTIVEC::top(Node *n) {
       emitTypeWrapperClass(swig_type.key, swig_type.item);
     }
 
+    Dump(proxy_h_prefix_code, f_proxy_h);
     Dump(swigtypes_h_code, f_proxy_h);
     Dump(proxy_h_code, f_proxy_h);
     Printf(f_proxy_h, "\n#ifdef __cplusplus\n");
@@ -365,6 +372,7 @@ int OBJECTIVEC::top(Node *n) {
   Delete(basename);
 
   if (proxy_flag) {
+    Delete(proxy_class_fwd_decl_code);
     Delete(proxy_class_decl_code);
     Delete(proxy_class_defn_code);
     Delete(proxy_class_enums_code);
@@ -379,6 +387,7 @@ int OBJECTIVEC::top(Node *n) {
     Delete(swigtypes_h_code);
     Delete(swigtypes_mm_code);
     Delete(proxy_h_code);
+    Delete(proxy_h_prefix_code);
     Delete(proxy_mm_code);
     Delete(f_proxy_h);
     Delete(f_proxy_mm);
@@ -588,6 +597,7 @@ int OBJECTIVEC::classHandler(Node *n) {
     Clear(proxy_global_function_decls);
     Clear(proxy_global_function_defns);
     Clear(proxy_class_enums_code);
+    Clear(proxy_class_fwd_decl_code);
     Clear(proxy_class_decl_code);
     Clear(proxy_class_defn_code);
     Clear(destrcutor_call);
@@ -599,11 +609,13 @@ int OBJECTIVEC::classHandler(Node *n) {
     // Write the code for proxy class
     emitProxyClass(n);
 
-    // Apply the necessary substitutions        
-    Replaceall(proxy_class_decl_code, "$objcclassname", proxy_class_name);
-    Replaceall(proxy_class_defn_code, "$objcclassname", proxy_class_name);
+    // Apply the necessary substitutions
+    Replaceall(proxy_class_fwd_decl_code, "$objcclassname", proxy_class_name);
+    Replaceall(proxy_class_decl_code    , "$objcclassname", proxy_class_name);
+    Replaceall(proxy_class_defn_code    , "$objcclassname", proxy_class_name);
 
     // And, dump everything to the proxy files
+    Printv(proxy_h_prefix_code, proxy_class_fwd_decl_code, NIL);
     Printv(proxy_h_code, proxy_class_decl_code, NIL);
     Printv(proxy_mm_code, proxy_class_defn_code, NIL);
     Printv(proxy_h_code,proxy_global_function_decls,NIL);
@@ -1536,6 +1548,7 @@ void OBJECTIVEC::emitProxyClass(Node *n) {
   }
 
   // the class interface
+  Printv(proxy_class_fwd_decl_code, "@class $objcclassname;\n", NIL);
   Printv(proxy_class_decl_code, proxy_class_imports, proxy_class_enums_code,
 	 objcinterfacemodifier, " $objcclassname",
 	 (*Char(wanted_base) || *Char(protocols)) ? " : " : "", wanted_base,
@@ -1559,8 +1572,9 @@ void OBJECTIVEC::emitProxyClass(Node *n) {
   Printv(proxy_class_defn_code, "\n", objccimplementationmodifier, " $objcclassname", objcimplementationcode, "\n",
 	 proxy_class_function_defns, destructor_defn, "\n", typemapLookup(n, "objcclassclose", typemap_lookup_type, WARN_NONE), "\n\n", NIL);
 
-  Replaceall(proxy_class_decl_code, "$objcbaseclass", proxy_class_name);
-  Replaceall(proxy_class_defn_code, "$objcbaseclass", proxy_class_name);
+  Replaceall(proxy_class_fwd_decl_code, "$objcbaseclass", proxy_class_name);
+  Replaceall(proxy_class_decl_code    , "$objcbaseclass", proxy_class_name);
+  Replaceall(proxy_class_defn_code    , "$objcbaseclass", proxy_class_name);
 
   Delete(baseclass);
   Delete(destructor_decl);
