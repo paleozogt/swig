@@ -171,6 +171,7 @@ public:
 void OBJECTIVEC::main(int argc, char *argv[]) {
   // Set language-specific subdirectory in SWIG library
   SWIG_library_directory("objc");
+  SWIG_config_cppext("mm");
 
   // Process command line options
   for (int i = 1; i < argc; i++) {
@@ -208,13 +209,13 @@ int OBJECTIVEC::top(Node *n) {
   /* Initialize I/O */
 
   // Create the _wrap files
-  String *wrapfile_h = NewStringf("%s_wrap.h", module);
+  String *wrapfile_h = Getattr(n, "outfile_h");
   f_wrap_h = NewFile(wrapfile_h, "w", SWIG_output_files());
   if (!f_wrap_h) {
     FileErrorDisplay(wrapfile_h);
     SWIG_exit(EXIT_FAILURE);
   }
-  String *wrapfile_mm = NewStringf("%s_wrap.mm", module);
+  String *wrapfile_mm = Getattr(n, "outfile");
   f_wrap_mm = NewFile(wrapfile_mm, "w", SWIG_output_files());
   if (!f_wrap_mm) {
     FileErrorDisplay(wrapfile_mm);
@@ -225,13 +226,16 @@ int OBJECTIVEC::top(Node *n) {
 
   // Create the _proxy files if proxy flag is true
   if (proxy_flag) {
-    String *proxyfile_h = NewStringf("%s_proxy.h", module);
+    String *basename= NewStringf("%s", Swig_file_basename(wrapfile_h));
+    Replaceall(basename, "_wrap", "");
+
+    String *proxyfile_h = NewStringf("%s_proxy.h", basename);
     f_proxy_h = NewFile(proxyfile_h, "w", SWIG_output_files());
     if (!f_proxy_h) {
       FileErrorDisplay(proxyfile_h);
       SWIG_exit(EXIT_FAILURE);
     }
-    String *proxyfile_mm = NewStringf("%s_proxy.mm", module);
+    String *proxyfile_mm = NewStringf("%s_proxy.mm", basename);
     f_proxy_mm = NewFile(proxyfile_mm, "w", SWIG_output_files());
     if (!f_proxy_mm) {
       FileErrorDisplay(proxyfile_mm);
@@ -239,6 +243,7 @@ int OBJECTIVEC::top(Node *n) {
     }
     Delete(proxyfile_h);
     Delete(proxyfile_mm);
+    Delete(basename);
   }
 
   f_runtime = NewString("");
@@ -264,7 +269,7 @@ int OBJECTIVEC::top(Node *n) {
   Printf(f_wrap_h, "#endif\n\n");
 
   Swig_banner(f_wrap_mm);
-  Printf(f_header, "#include \"%s_wrap.h\"\n", module);
+  Printf(f_header, "#include \"%s\"\n", Swig_file_filename(wrapfile_h));
 
   if (proxy_flag) {
     Swig_banner(f_proxy_h);
