@@ -224,26 +224,23 @@ int OBJECTIVEC::top(Node *n) {
   Delete(wrapfile_h);
   Delete(wrapfile_mm);
 
+  String *basename= NewStringf("%s", Swig_file_basename(wrapfile_h));
+  Replaceall(basename, "_wrap", "");
+  String *proxyfile_h = NewStringf("%s_proxy.h", basename);
+  String *proxyfile_mm = NewStringf("%s_proxy.mm", basename);
+
   // Create the _proxy files if proxy flag is true
   if (proxy_flag) {
-    String *basename= NewStringf("%s", Swig_file_basename(wrapfile_h));
-    Replaceall(basename, "_wrap", "");
-
-    String *proxyfile_h = NewStringf("%s_proxy.h", basename);
     f_proxy_h = NewFile(proxyfile_h, "w", SWIG_output_files());
     if (!f_proxy_h) {
       FileErrorDisplay(proxyfile_h);
       SWIG_exit(EXIT_FAILURE);
     }
-    String *proxyfile_mm = NewStringf("%s_proxy.mm", basename);
     f_proxy_mm = NewFile(proxyfile_mm, "w", SWIG_output_files());
     if (!f_proxy_mm) {
       FileErrorDisplay(proxyfile_mm);
       SWIG_exit(EXIT_FAILURE);
     }
-    Delete(proxyfile_h);
-    Delete(proxyfile_mm);
-    Delete(basename);
   }
 
   f_runtime = NewString("");
@@ -281,8 +278,8 @@ int OBJECTIVEC::top(Node *n) {
     Printf(f_proxy_h, "#endif\n\n");
 
     Swig_banner(f_proxy_mm);
-    Printf(f_proxy_mm, "#include \"%s_proxy.h\"\n", module);
-    Printf(f_proxy_mm, "#include \"%s_wrap.h\"\n\n", module);
+    Printf(f_proxy_mm, "#include \"%s\"\n", Swig_file_filename(proxyfile_h));
+    Printf(f_proxy_mm, "#include \"%s\"\n\n", Swig_file_filename(wrapfile_h));
   }
   // Create strings for holding the generated code. These will be dumped
   // to the generated files at the end of the top function.
@@ -363,6 +360,9 @@ int OBJECTIVEC::top(Node *n) {
   Delete(f_wrappers);
   Delete(f_wrap_h);
   Delete(f_wrap_mm);
+  Delete(proxyfile_h);
+  Delete(proxyfile_mm);
+  Delete(basename);
 
   if (proxy_flag) {
     Delete(proxy_class_decl_code);
