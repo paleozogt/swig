@@ -1207,12 +1207,12 @@ void OBJECTIVEC::emitProxyClassFunction(Node *n) {
     if ((tm = Getattr(p, "tmap:objctype"))) {
       substituteClassname(tm, pt);
       Printf(objcparmtype, "%s", tm);
+      if (gencomma)
+        Printf(imcall, ", ");      
     } else {
       Swig_warning(WARN_OBJC_TYPEMAP_OBJCTYPE_UNDEF, input_file, line_number, "No objctype typemap defined for %s\n", SwigType_str(pt, 0));
     }
 
-    if (gencomma)
-      Printf(imcall, ", ");
 
     String *arg = makeParameterName(n, p, i, setter_flag);
 
