@@ -73,22 +73,9 @@
 
 // Proxy interface and implementation (for C++ class with a base class)
 %typemap(objcinterfacecode_derived) SWIGTYPE %{
--(void*)getCptr;
--(id)initWithCptr: (void*)cptr swigOwnCObject: (BOOL)ownCObject;
 %}
 
 %typemap(objcimplementationcode_derived) SWIGTYPE %{
-- (void*)getCptr {
-	return swigCPtr;
-}
-
--(id)initWithCptr: (void*)cptr swigOwnCObject: (BOOL)ownCObject {
-	if((self = [super init])) {
-		swigCPtr = cptr;
-        swigCMemOwn = ownCObject;
-	}
-	return self;
-}
 %}
 
 /*
