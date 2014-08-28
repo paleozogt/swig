@@ -37,7 +37,6 @@
 %typemap(imtype) char *, const char *, char[ANY], char[]              "NSString *"
 %typemap(imtype) char *&                                "NSString *"
 
-
 // Objects will always be treated as pointers in ObjectiveC++
 %typemap(imtype) SWIGTYPE                               "void*" 
 
@@ -287,12 +286,14 @@
 // Objects will always be treated as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
 
+%typemap(objctype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*             "$1_type"
+%typemap(objctype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  "$*1_type *"
 
 // C/C++ Pointers are treated as  as pointers in ObjectiveC
-%typemap(objctype) SWIGTYPE *                           "$1_type"
+%typemap(objctype) SWIGTYPE *                           "$objcclassname*"
 
 // Arrays to non-primitive types
-%typemap(objctype) SWIGTYPE []                          "$*1_type *"
+%typemap(objctype) SWIGTYPE []                          "$objcclassname*"
 
 // Pointer to a class member
 %typemap(objctype) SWIGTYPE (CLASS::*)                  "$objcclassname*"  
