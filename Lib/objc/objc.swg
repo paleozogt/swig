@@ -29,6 +29,10 @@
 %typemap(imtype) double             "double"
 %typemap(imtype) void               "void"
 
+
+%typemap(imtype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*             "$1_type"
+%typemap(imtype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  "$*1_type *"
+
 // Booleans
 %typemap(imtype) bool               					"BOOL"
 %typemap(imtype) const bool &, bool &, const bool *, bool *             "BOOL *"
@@ -41,10 +45,10 @@
 %typemap(imtype) SWIGTYPE                               "void*" 
 
 // C/C++ object Pointers, are treated as void* in ObjectiveC++
-%typemap(imtype) SWIGTYPE *                             "$1_type"
+%typemap(imtype) SWIGTYPE *                             "void*"
 
 // Arrays for non-primitive types
-%typemap(imtype) SWIGTYPE []                            "$*1_type *"
+%typemap(imtype) SWIGTYPE []                            "void*"
 
 // Pointer to a class member will be void*
 %typemap(imtype) SWIGTYPE (CLASS::*)                    "void*"  
@@ -349,19 +353,20 @@
 
 // C/C++ pointers to primitive types are treated as is in the Proxy layer.
 %typemap(objcin)const bool *,              bool *,
-             const char *,  			char *,
-	     	 const signed char *, 		signed char *,
-	         const unsigned char *, 	unsigned char *,
-		     const short *,				short *,
-		     const unsigned short *,	unsigned short *,
-		     const int *,		    	int *,
-		     const unsigned int *,		unsigned int *,
-			 const long *,				long &,
-	     	 const unsigned long *, 	unsigned long &,
-	     	 const long long *, 		long long *,
-	     	 const unsigned long long *,unsigned long long *,
-	      	 const float *, 			float *,
-	      	 const double *,  			double *
+    const char *, char *,
+    const signed char *, signed char *,
+    const unsigned char *,  unsigned char *,
+    const short *, short *,
+    const unsigned short *, unsigned short *,
+    const int *, int *,
+    const unsigned int *, unsigned int *,
+    const long *, long &,
+    const unsigned long *, unsigned long &,
+    const long long *, long long *,
+    const unsigned long long *,unsigned long long *,
+    const float *, float *,
+    const double *, double *,
+    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  
 "$objcinput"
 
 //C strings:
@@ -404,35 +409,36 @@
 %typemap(objcout) void "$imcall;"
 
 %typemap(objcout) const bool &,         bool &,
-             const char &,  			char &,
-	     	 const signed char &, 		signed char &,
-	         const unsigned char &, 	unsigned char &,
-		     const short &,				short &,
-		     const unsigned short &,	unsigned short &,
-		     const int &,		    	int &,
-		     const unsigned int &,		unsigned int &,
-			 const long &,				long &,
-	     	 const unsigned long &, 	unsigned long &,
-	     	 const long long &, 		long long &,
-	     	 const unsigned long long &,unsigned long long &,
-	      	 const float &, 			float &,
-	      	 const double &,  			double &
+    const char &,     char &,
+    const signed char &,   signed char &,
+    const unsigned char &,  unsigned char &,
+    const short &,    short &,
+    const unsigned short &, unsigned short &,
+    const int &,       int &,
+    const unsigned int &,  unsigned int &,
+    const long &,    long &,
+    const unsigned long &,  unsigned long &,
+    const long long &,   long long &,
+    const unsigned long long &,unsigned long long &,
+    const float &,    float &,
+    const double &,     double &
 %{ return $imcall; %}
 
 %typemap(objcout)const bool *,              bool *,
-             const char *,  			char *,
-	     	 const signed char *, 		signed char *,
-	         const unsigned char *, 	unsigned char *,
-		     const short *,				short *,
-		     const unsigned short *,	unsigned short *,
-		     const int *,		    	int *,
-		     const unsigned int *,		unsigned int *,
-			 const long *,				long *,
-	     	 const unsigned long *, 	unsigned long *,
-	     	 const long long *, 		long long *,
-	     	 const unsigned long long *,unsigned long long *,
-	      	 const float *, 			float *,
-	      	 const double *,  			double *
+    const char *,     char *,
+    const signed char *,   signed char *,
+    const unsigned char *,  unsigned char *,
+    const short *,    short *,
+    const unsigned short *, unsigned short *,
+    const int *,       int *,
+    const unsigned int *,  unsigned int *,
+    const long *,    long *,
+    const unsigned long *,  unsigned long *,
+    const long long *,   long long *,
+    const unsigned long long *,unsigned long long *,
+    const float *,    float *,
+    const double *,     double *,
+    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  
 %{ return $imcall; %}
 
 // C strings: 
