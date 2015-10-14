@@ -455,13 +455,13 @@
     return ret; %}
 
 // Objects returned by value: Convert the void* pointer to the ObjectiveC pointer.
-// Here, for now, we presume that the returned C++ pointers will not have to be deleted by the client directly
-// As such, we mark swigOwnCObject as NO. This has to be reviewed again.
+// Since we can't pass by value, we actually have a heap-copy of the object,
+// which needs to be deleted automatically, so we set swigOwnCObject to YES.
 %typemap(objcout) SWIGTYPE
 %{   void* cPtr = $imcall;
      $objcclassname* ret = nil;
      if(cPtr) {
-        ret = [[[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:NO] autorelease];
+        ret = [[[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
      }
     return ret; %}
 
