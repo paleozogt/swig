@@ -52,7 +52,10 @@ static void SWIGUNUSED SWIG_ObjcThrowException(SWIG_ObjcExceptionCodes code, con
   };
   const SWIG_ObjcExceptions_t *except_ptr = Objc_exceptions;
   while (except_ptr->code != code && except_ptr->code)
-   except_ptr++;
+    except_ptr++;
+  @throw([NSException exceptionWithName:[NSString stringWithUTF8String:except_ptr->Objc_exception]
+                      reason:[NSString stringWithUTF8String:msg]
+                      userInfo:nil]);
 }
 }
 
