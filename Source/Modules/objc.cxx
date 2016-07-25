@@ -352,8 +352,6 @@ int OBJECTIVEC::top(Node *n) {
   // Cleanup
   Delete(wrap_h_code);
   Delete(wrap_mm_code);
-  Close(f_wrap_h);
-  Close(f_wrap_mm);
   Delete(f_runtime);
   Delete(f_init);
   Delete(f_header);
@@ -377,8 +375,6 @@ int OBJECTIVEC::top(Node *n) {
     Delete(swigtypes_mm_code);
     Delete(proxy_h_code);
     Delete(proxy_mm_code);
-    Close(f_proxy_h);
-    Close(f_proxy_mm);
     Delete(f_proxy_h);
     Delete(f_proxy_mm);
   }
