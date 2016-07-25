@@ -1101,7 +1101,7 @@ void OBJECTIVEC::emitProxyGlobalFunctions(Node *n) {
 
   /* Write the function declaration to the proxy_h_code 
      and function definition to the proxy_mm_code */
-  if ((member_func_flag || member_constant_flag || Strcmp(storage, "friend") == 0 || Strcmp(storage, "typedef") == 0))
+  if ((member_func_flag || member_constant_flag || Cmp(storage, "friend") == 0 || Cmp(storage, "typedef") == 0))
   {
   Printv(proxy_global_function_decls, function_decl, "\n", NIL);
   Printv(proxy_global_function_defns, function_defn, "\n", NIL);
