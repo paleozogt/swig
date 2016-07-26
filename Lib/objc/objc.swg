@@ -289,6 +289,7 @@
 
 // Objects will always be treated as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
+%typemap(objcclasstype) SWIGTYPE                        "$objcclassname"
 
 %typemap(objctype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*             "$1_type"
 %typemap(objctype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  "$*1_type *"
