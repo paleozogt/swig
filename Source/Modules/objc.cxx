@@ -155,6 +155,7 @@ public:
   void emitTypeWrapperClass(String *classname, SwigType *type);
 
   /* Helper functions */
+  virtual void replaceSpecialVariables(String *method, String *tm, Parm *parm);
   bool substituteClassname(String *tm, SwigType *pt);
   void substituteClassnameVariable(String *tm, const char *classnamevariable, SwigType *type);
   Parm *skipIgnoredArgs(Parm *p);
@@ -1645,6 +1646,11 @@ void OBJECTIVEC::emitTypeWrapperClass(String *classname, SwigType *type) {
   Delete(n);
 }
 
+void OBJECTIVEC::replaceSpecialVariables(String *method, String *tm, Parm *parm) {
+  (void)method;
+  SwigType *type = Getattr(parm, "type");
+  substituteClassname(tm, type);
+}
 
 /* -----------------------------------------------------------------------------
  * substituteClassname()
