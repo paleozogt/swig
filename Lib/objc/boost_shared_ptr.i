@@ -99,28 +99,29 @@
 %typemap (objctype) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >, 
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > &,
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *,
-                    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& "TYPE*"
+                    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& "$typemap(objctype, TYPE)"
 
 %typemap(objcin)    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >, 
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > &,
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *,
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& "[$objcinput getCPtr]"
 
+
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > & {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > * {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 
 
@@ -132,65 +133,42 @@
   }
 %typemap(objcout) CONST TYPE * {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 %typemap(objcout) TYPE *CONST& {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[TYPE alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
   }
 
 // Base proxy classes
 %typemap(objcimplementationcode) TYPE %{
-  private transient long swigCPtr;
-  private transient boolean swigCMemOwn;
+-(void*)getCptr {
+	return swigCPtr;
+}
 
-  PTRCTOR_VISIBILITY $objcclassname(void* cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
-    swigCPtr = cPtr;
-  }
-
-  CPTR_VISIBILITY static long getCPtr($objcclassname obj) {
-    return (obj == nil) ? 0 : obj.swigCPtr;
-  }
+-(id)initWithCptr: (void*)cptr swigOwnCObject: (BOOL)ownCObject {
+	if((self = [super init])) {
+		swigCPtr = cptr;
+        swigCMemOwn = ownCObject;
+	}
+	return self;
+}
 %}
 
 // Derived proxy classes
 %typemap(objcimplementationcode_derived) TYPE %{
-  private transient long swigCPtr;
-  private boolean swigCMemOwnDerived;
-
-  PTRCTOR_VISIBILITY $objcclassname(void* cPtr, boolean cMemoryOwn) {
-    super($imclassname.$objcclazznameSWIGSmartPtrUpcast(cPtr), true);
-    swigCMemOwnDerived = cMemoryOwn;
-    swigCPtr = cPtr;
-  }
-
-  CPTR_VISIBILITY static long getCPtr($objcclassname obj) {
-    return (obj == nil) ? 0 : obj.swigCPtr;
-  }
 %}
 
-%typemap(objcdestruct, methodname="delete", methodmodifiers="public synchronized") TYPE {
-    if (swigCPtr != 0) {
-      if (swigCMemOwn) {
-        swigCMemOwn = false;
+%typemap(objcdestruct, methodname="dealloc", methodmodifiers="public") TYPE %{
+  if (swigCPtr != NULL) {
+    if (swigCMemOwn) {
         $imcall;
-      }
-      swigCPtr = 0;
+        swigCMemOwn = NO;
     }
+    swigCPtr = NULL;
   }
-
-%typemap(objcdestruct_derived, methodname="delete", methodmodifiers="public synchronized") TYPE {
-    if (swigCPtr != 0) {
-      if (swigCMemOwnDerived) {
-        swigCMemOwnDerived = false;
-        $imcall;
-      }
-      swigCPtr = 0;
-    }
-    super.delete();
-  }
-
+  [super dealloc];
+%}
 
 %template() SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >;
 %enddef
