@@ -1,5 +1,5 @@
 // Users can provide their own SWIG_SHARED_PTR_TYPEMAPS macro before including this file to change the
-// visibility of the constructor and getCPtr method if desired to public if using multiple modules.
+// visibility of the constructor and getCptr method if desired to public if using multiple modules.
 #ifndef SWIG_SHARED_PTR_TYPEMAPS
 #define SWIG_SHARED_PTR_TYPEMAPS(CONST, TYPE...) SWIG_SHARED_PTR_TYPEMAPS_IMPLEMENTATION(protected, protected, CONST, TYPE)
 #endif
@@ -104,7 +104,7 @@
 %typemap(objcin)    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >, 
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > &,
                     SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *,
-                    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& "[$objcinput getCPtr]"
+                    SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& "[$objcinput getCptr]"
 
 
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > {
