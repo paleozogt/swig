@@ -166,6 +166,16 @@ public:
   const String *typemapLookup(Node *n, const_String_or_char_ptr tmap_method, SwigType *type, int warning, Node *typemap_attributes = 0);
 };
 
+String *getOverloadedName(Node *n) {
+  String *overloaded_name = NewStringf("%s", Getattr(n, "sym:name"));
+
+  if (Getattr(n, "sym:overloaded")) {
+    Printv(overloaded_name, Getattr(n, "sym:overname"), NIL);
+  }
+
+  return overloaded_name;
+}
+
 /* ---------------------------------------------------------------------
  * main()
  *
@@ -197,6 +207,8 @@ void OBJECTIVEC::main(int argc, char *argv[]) {
 
   // Set typemap language (historical) 
   SWIG_typemap_lang("objc");
+
+  allow_overloading();
 }
 
 /* ---------------------------------------------------------------------
@@ -859,13 +871,24 @@ int OBJECTIVEC::functionWrapper(Node *n) {
   bool is_constructor = (Cmp(nodeType(n), "constructor") == 0);
   bool is_destructor = (Cmp(nodeType(n), "destructor") == 0);
   bool is_constant = (Cmp(nodeType(n), "constant") == 0);
+  String *overloaded_name = getOverloadedName(n);
+
+  if (Getattr(n, "sym:overloaded") && global_func_flag) {
+    Node *over = Swig_symbol_isoverloaded(n);
+    if (over != n) {
+      Swig_warning(WARN_LANG_OVERLOAD_DECL, input_file, line_number, "Overloaded declaration ignored.  %s\n", Swig_name_decl(n));
+      Swig_warning(WARN_LANG_OVERLOAD_DECL, Getfile(over), Getline(over), "Previous declaration is %s\n", Swig_name_decl(over));
+      return SWIG_NOWRAP;
+    }
+  }
 
   if (!Getattr(n, "sym:overloaded")) {
     if (!addSymbol(Getattr(n, "sym:name"), n))
       return SWIG_ERROR;
   }
   // Create the function's wrappered name
-  String *wname = Swig_name_wrapper(symname);
+  String *wname = Swig_name_wrapper(overloaded_name);
+
 
   // Create the wrapper function object
   Wrapper *wrapper = NewWrapper();
