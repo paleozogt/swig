@@ -27,11 +27,11 @@
 %typemap(imtype) unsigned long long "unsigned long long"
 %typemap(imtype) float              "float"
 %typemap(imtype) double             "double"
+%typemap(imtype) size_t             "size_t"
 %typemap(imtype) void               "void"
 
-
-%typemap(imtype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*             "$1_type"
-%typemap(imtype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  "$*1_type *"
+%typemap(imtype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*,size_t*             "$1_type"
+%typemap(imtype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[] "$*1_type *"
 
 // Booleans
 %typemap(imtype) bool               					"BOOL"
@@ -76,7 +76,8 @@
              long long, 
              unsigned long long,
              float, 
-             double
+             double,
+             size_t
 %{ $1 = ($1_ltype)$input; %}
 
 // No "in" for void
@@ -95,7 +96,8 @@
 	     	 const long long &, 		long long &,
 	     	 const unsigned long long &,unsigned long long &,
 	      	 const float &, 			float &,
-	      	 const double &,  			double &
+	      	 const double &,  			double &,
+	      	 const size_t &,  			size_t &
 %{ $1 = ($1_ltype)$input; %}
 
 %typemap(in) const signed char *, 		signed char *,           
@@ -109,7 +111,8 @@
  	const long long *, 		long long *,             
  	const unsigned long long *,     unsigned long long *,    
  	const float *, 			float *,               
- 	const double *,  	        double *        
+ 	const double *,  	        double *,
+ 	const size_t *,  	        size_t *
 %{ $1 = ($1_ltype)$input;%}
 
 //Booleans:
@@ -177,7 +180,8 @@
             long long,
             unsigned long long,
             float,
-            double
+            double,
+            size_t
 %{ $result = $1; %}
 
 %typemap(out) void ""
@@ -195,7 +199,8 @@
 	     	 const long long &, 		long long &,
 	     	 const unsigned long long &,unsigned long long &,
 	      	 const float &, 			float &,
-	      	 const double &,  			double &
+	      	 const double &,  			double &,
+	      	 const size_t &,  			size_t &
 %{ $result = $1; %}
 
 
@@ -211,7 +216,8 @@
 	     	 const long long *, 		long long *,
 	     	 const unsigned long long *,unsigned long long *,
 	      	 const float *, 			float *,
-	      	 const double *,  			double *
+	      	 const double *,  			double *,
+	      	 const size_t *,  			size_t *
 %{ $result = $1; %}
 
 // Booleans:
@@ -282,6 +288,7 @@
 %typemap(objctype)  unsigned long long "unsigned long long"
 %typemap(objctype)  float              "float"
 %typemap(objctype)  double             "double"
+%typemap(objctype)  size_t             "size_t"
 %typemap(objctype)  void               "void"
 
 //C strings:
@@ -291,8 +298,8 @@
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
 %typemap(objcclasstype) SWIGTYPE                        "$objcclassname"
 
-%typemap(objctype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*             "$1_type"
-%typemap(objctype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  "$*1_type *"
+%typemap(objctype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*,size_t*             "$1_type"
+%typemap(objctype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[] "$*1_type *"
 
 // C/C++ Pointers are treated as  as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE *                           "$objcclassname*"
@@ -329,7 +336,8 @@
              long long, 
              unsigned long long,
              float, 
-             double
+             double,
+             size_t
 "$objcinput"
 
 // No "objcin" for void
@@ -349,7 +357,8 @@
 	     	 const long long &, 		long long &,
 	     	 const unsigned long long &,unsigned long long &,
 	      	 const float &, 			float &,
-	      	 const double &,  			double &
+	      	 const double &,  			double &,
+	      	 const size_t &,  			size_t &
 "$objcinput"
 
 // C/C++ pointers to primitive types are treated as is in the Proxy layer.
@@ -367,7 +376,8 @@
     const unsigned long long *,unsigned long long *,
     const float *, float *,
     const double *, double *,
-    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  
+    const size_t *, size_t *,
+    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[]
 "$objcinput"
 
 //C strings:
@@ -385,6 +395,7 @@
 %typemap(objcin) SWIGTYPE (CLASS::*) "[$objcinput getCptr]" 
 
 %typemap(objcin) SWIGTYPE *const& "[$objcinput getCptr]" 
+
 
 /*
  * OBJCOUT TYPEMAPS: Used for return-type type conversions: ObjectiveC++(wrapper) to ObjectiveC(proxy)
@@ -404,7 +415,8 @@
 	      long long,
 	      unsigned long long,
 	      float,
-	      double
+	      double,
+	      size_t
 %{ return $imcall; %}
 
 %typemap(objcout) void "$imcall;"
@@ -422,7 +434,8 @@
     const long long &,   long long &,
     const unsigned long long &,unsigned long long &,
     const float &,    float &,
-    const double &,     double &
+    const double &,     double &,
+    const size_t &,     size_t &
 %{ return $imcall; %}
 
 %typemap(objcout)const bool *,              bool *,
@@ -439,7 +452,8 @@
     const unsigned long long *,unsigned long long *,
     const float *,    float *,
     const double *,     double *,
-    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[]  
+    const size_t *,     size_t *,
+    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[]
 %{ return $imcall; %}
 
 // C strings: 
@@ -517,8 +531,6 @@
 /* apply typemaps */
 // Treat references to arrays like like references to a single element.
 %apply SWIGTYPE & { SWIGTYPE ((&)[ANY]) }
-%apply unsigned long { size_t };
-%apply const unsigned long & { const size_t & };
 
 /* const pointers */
 %apply SWIGTYPE * { SWIGTYPE *const }
