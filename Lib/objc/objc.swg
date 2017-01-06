@@ -9,6 +9,16 @@
 
  * ----------------------------------------------------------------------------- */
 
+%define ADD_NAMESPACE_PREFIX()
+#if defined(SWIGOBJECTIVEC_PREFIX)
+%rename(SWIGOBJECTIVEC_PREFIX ## "%(firstuppercase)s", %$isclass) "";
+%rename(SWIGOBJECTIVEC_PREFIX ## "%(firstuppercase)s", %$isenum) "";
+#else
+#endif
+%enddef
+
+ADD_NAMESPACE_PREFIX()
+
 /* 
  * IMTYPE TYPEMAPS: Represents the ObjectiveC++ type corresponding to each C++ type. 
  */
