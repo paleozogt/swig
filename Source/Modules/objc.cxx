@@ -25,6 +25,7 @@ private:
 
   /* Various flags controlling the code generation. */
   bool proxy_flag;		// flag: determine should the proxy files be generated or not
+  String *namespace_prefix;
 
   /* State variables which indicate what is being wrapped at the moment. */
   bool member_variable_flag;	// flag: wrapping member variables
@@ -93,6 +94,7 @@ public:
       swigtypes_h_code(NULL),
       swigtypes_mm_code(NULL),
       proxy_flag(true),
+      namespace_prefix(NULL),
       member_variable_flag(false),
       static_member_variable_flag(false),
       global_variable_flag(false),
@@ -192,18 +194,28 @@ void OBJECTIVEC::main(int argc, char *argv[]) {
   for (int i = 1; i < argc; i++) {
     if (argv[i]) {
       if (strcmp(argv[i], "-noproxy") == 0) {
-	Swig_mark_arg(i);
-	proxy_flag = false;
+        Swig_mark_arg(i);
+        proxy_flag = false;
+	  } else if (strcmp(argv[i], "-prefix") == 0) {
+	    if (argv[i + 1]) {
+          namespace_prefix= NewString(argv[i + 1]);
+	      Swig_mark_arg(i);
+	      Swig_mark_arg(i + 1);
+	      i++;
+	    } else {
+	      Swig_arg_error();
+	    }
       } else if (strcmp(argv[i], "-help") == 0) {
-	Printf(stdout, "%s\n", usage);
+        Printf(stdout, "%s\n", usage);
       }
     }
   }
 
-  // Set language-specific preprocessing symbol
+  // symbols for the swig interface files
   Preprocessor_define("SWIGOBJECTIVEC 1", 0);
+  if (namespace_prefix) Preprocessor_define(NewStringf("SWIGOBJECTIVEC_PREFIX \"%s\"", namespace_prefix), 0);
 
-  // Set language-specific configuration file 
+  // Set language-specific configuration file
   SWIG_config_file("objc.swg");
 
   // Set typemap language (historical) 
@@ -222,6 +234,11 @@ void OBJECTIVEC::main(int argc, char *argv[]) {
 int OBJECTIVEC::top(Node *n) {
   /* Get the module name */
   String *module = Getattr(n, "name");
+  String *prefixed_module = NewString(module);
+  if (namespace_prefix) {
+    // camel-case join the prefix to the module name
+    prefixed_module= NewStringf("%s%c%s", namespace_prefix, toupper((int) *Char(module)), Char(module)+1);
+  }
 
   /* Initialize I/O */
 
@@ -303,7 +320,7 @@ int OBJECTIVEC::top(Node *n) {
   wrap_h_code = NewString("");
   wrap_mm_code = NewString("");
   if (proxy_flag) {
-    proxy_h_prefix_code = NewStringf("/* forward declarations */\n@class %s;\n", module);
+    proxy_h_prefix_code = NewStringf("/* forward declarations */\n@class %s;\n", prefixed_module);
     proxy_h_code = NewString("");
     proxy_mm_code = NewString("");
     swigtypes_h_code = NewString("\n");
@@ -315,8 +332,8 @@ int OBJECTIVEC::top(Node *n) {
     proxy_class_enums_code = NewString("");
     proxy_class_function_decls = NewString("");
     proxy_class_function_defns = NewString("");
-    proxy_global_function_decls = NewStringf("@interface %s : NSObject\n", module);
-    proxy_global_function_defns = NewStringf("@implementation %s\n", module);
+    proxy_global_function_decls = NewStringf("@interface %s : NSObject\n", prefixed_module);
+    proxy_global_function_defns = NewStringf("@implementation %s\n", prefixed_module);
     proxy_class_imports = NewString("");
 
     destrcutor_call = NewString("");
@@ -1949,6 +1966,7 @@ extern "C" Language *swig_objectivec(void) {
 // Usage message.
 const char *const OBJECTIVEC::usage = (char *) "\
 ObjectiveC options (available with -objc)\n\
-    -noproxy    - Do not generate proxy files (Only C wrappers will be generated) \n\
-    -help       - This message \n\
+    -prefix <pfx> - Namespace prefix for classes \n\
+    -noproxy      - Do not generate proxy files (Only C wrappers will be generated) \n\
+    -help         - This message \n\
 \n";
