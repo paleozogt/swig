@@ -303,7 +303,7 @@ int OBJECTIVEC::top(Node *n) {
   wrap_h_code = NewString("");
   wrap_mm_code = NewString("");
   if (proxy_flag) {
-    proxy_h_prefix_code = NewString("/* forward declarations */\n");
+    proxy_h_prefix_code = NewStringf("/* forward declarations */\n@class %s;\n", module);
     proxy_h_code = NewString("");
     proxy_mm_code = NewString("");
     swigtypes_h_code = NewString("\n");
@@ -315,8 +315,8 @@ int OBJECTIVEC::top(Node *n) {
     proxy_class_enums_code = NewString("");
     proxy_class_function_decls = NewString("");
     proxy_class_function_defns = NewString("");
-    proxy_global_function_decls = NewString("");
-    proxy_global_function_defns = NewString("");
+    proxy_global_function_decls = NewStringf("@interface %s : NSObject\n", module);
+    proxy_global_function_defns = NewStringf("@implementation %s\n", module);
     proxy_class_imports = NewString("");
 
     destrcutor_call = NewString("");
@@ -325,6 +325,9 @@ int OBJECTIVEC::top(Node *n) {
 
   /* Emit code for children */
   Language::top(n);
+
+  Printf(proxy_global_function_decls, "@end\n");
+  Printf(proxy_global_function_defns, "@end\n");
 
   // Write to the wrap_h
   Dump(wrap_h_code, f_wrap_h);
@@ -356,6 +359,7 @@ int OBJECTIVEC::top(Node *n) {
     Dump(proxy_h_prefix_code, f_proxy_h);
     Dump(swigtypes_h_code, f_proxy_h);
     Dump(proxy_h_code, f_proxy_h);
+    Dump(proxy_global_function_decls, f_proxy_h);
     Printf(f_proxy_h, "\n#ifdef __cplusplus\n");
     Printf(f_proxy_h, "}\n");
     Printf(f_proxy_h, "#endif\n\n");
@@ -367,6 +371,7 @@ int OBJECTIVEC::top(Node *n) {
 //        Printf(f_proxy_mm, "#endif\n\n");
     Dump(swigtypes_mm_code, f_proxy_mm);
     Dump(proxy_mm_code, f_proxy_mm);
+    Dump(proxy_global_function_defns, f_proxy_mm);
 //        Printf(f_proxy_mm, "\n#ifdef __cplusplus\n");
 //        Printf(f_proxy_mm, "}\n");
 //        Printf(f_proxy_mm, "#endif\n");
@@ -607,8 +612,6 @@ int OBJECTIVEC::classHandler(Node *n) {
     Clear(proxy_class_imports);
     Clear(proxy_class_function_decls);
     Clear(proxy_class_function_defns);
-    Clear(proxy_global_function_decls);
-    Clear(proxy_global_function_defns);
     Clear(proxy_class_enums_code);
     Clear(proxy_class_fwd_decl_code);
     Clear(proxy_class_decl_code);
@@ -631,8 +634,6 @@ int OBJECTIVEC::classHandler(Node *n) {
     Printv(proxy_h_prefix_code, proxy_class_fwd_decl_code, NIL);
     Printv(proxy_h_code, proxy_class_decl_code, NIL);
     Printv(proxy_mm_code, proxy_class_defn_code, NIL);
-    Printv(proxy_h_code,proxy_global_function_decls,NIL);
-    Printv(proxy_mm_code,proxy_global_function_defns,NIL);
     // Tidy up
     Delete(proxy_class_qname);
     proxy_class_qname = NULL;
@@ -1007,9 +1008,9 @@ int OBJECTIVEC::nativeWrapper(Node *n) {
 /* -----------------------------------------------------------------------------
  * emitProxyGlobalFunctions()
  *
- * C/C++ global functions and global variables are mapped to ObjectiveC global functions.
+ * C/C++ global functions and global variables are mapped to static functions in
+ * the "module" class.
  * C/C++ types will be replaced with their equivalent ObjectiveC types (eg: char* --> NSString*)
- * A prefix 'Objc' will be added to counter linker redifiniton complains. 
  *
  * ----------------------------------------------------------------------------- */
 
@@ -1055,16 +1056,13 @@ void OBJECTIVEC::emitProxyGlobalFunctions(Node *n) {
     Putc(toupper((int) *Char(variable_name)), proxyfunctionname);
     Printf(proxyfunctionname, "%s", Char(variable_name) + 1);
   } else {
-    proxyfunctionname = NewString("Objc");
-    // Capitalize the first letter
-    Putc(toupper((int) *Char(symname)), proxyfunctionname);
-    Printf(proxyfunctionname, "%s", Char(symname) + 1);
+    proxyfunctionname = NewString(symname);
   }
 
   /* Write the proxy global function declaration and definition */
 
   // Begin the first line of the function
-  Printv(function_decl, objcrettype, " ", proxyfunctionname, "(", NIL);
+  Printv(function_decl, "+(", objcrettype, ")", proxyfunctionname, NIL);
 
   // Prepare the call to intermediate function
   Printf(imcall, "%s(", imfunctionname);
@@ -1107,18 +1105,15 @@ void OBJECTIVEC::emitProxyGlobalFunctions(Node *n) {
     }
 
     // Add parameter to proxy function
-    if (gencomma >= 2)
-      Printf(function_decl, ", ");
-    gencomma = 2;
-    Printf(function_decl, "%s %s", objcparmtype, arg);
+    if (gencomma == 0)
+	  Printf(function_decl, ": (%s)%s", objcparmtype, arg);
+    else if (gencomma >= 1)
+	  Printf(function_decl, " %s: (%s)%s", arg, objcparmtype, arg);
+    gencomma++;
 
     Delete(arg);
     Delete(objcparmtype);
   }
-
-  // End the first line of the function
-  Printv(function_decl, ")", NIL);	// or 
-  //Printv(function_decl, paramstring, ")", NIL);
 
   Printv(function_defn, function_decl, "\n{\n", NIL);
   Printf(function_decl, ";");
@@ -1136,16 +1131,16 @@ void OBJECTIVEC::emitProxyGlobalFunctions(Node *n) {
 
   Printf(function_defn, " %s\n}\n", tm ? (const String *) tm : empty_string);
 
-  /* Write the function declaration to the proxy_h_code 
-     and function definition to the proxy_mm_code */
-  if ((member_func_flag || member_constant_flag || Cmp(storage, "friend") == 0 || Cmp(storage, "typedef") == 0))
-  {
+    /* Write the function declaration to the proxy_h_code
+       and function definition to the proxy_mm_code */
+  //if ((member_func_flag || member_constant_flag || Cmp(storage, "friend") == 0 || Cmp(storage, "typedef") == 0))
+  //{
   Printv(proxy_global_function_decls, function_decl, "\n", NIL);
   Printv(proxy_global_function_defns, function_defn, "\n", NIL);
-  }else {
-  Printv(proxy_h_code, function_decl, "\n", NIL);
-  Printv(proxy_mm_code, function_defn, "\n", NIL);
-  }
+  //}else {
+  //Printv(proxy_h_code, function_decl, "\n", NIL);
+  //Printv(proxy_mm_code, function_defn, "\n", NIL);
+  //}
   //Delete(paramstring);
   Delete(proxyfunctionname);
   Delete(objcrettype);
