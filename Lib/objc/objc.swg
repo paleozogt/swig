@@ -40,8 +40,33 @@ ADD_NAMESPACE_PREFIX()
 %typemap(imtype) size_t             "size_t"
 %typemap(imtype) void               "void"
 
-%typemap(imtype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*,size_t*             "$1_type"
-%typemap(imtype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[] "$*1_type *"
+%typemap(imtype) bool*,
+                 unsigned char*,
+                 short*,
+                 unsigned short*,
+                 int*,
+                 unsigned int*,
+                 long unsigned long*,
+                 long long*,
+                 unsigned long long*,
+                 float*,
+                 double*,
+                 size_t*
+"$1_type"
+
+%typemap(imtype) bool[],
+                 unsigned char[],
+                 short[],
+                 unsigned short[],
+                 int[],
+                 unsigned int[],
+                 long unsigned long[],
+                 long long[],
+                 unsigned long long[],
+                 float[],
+                 double[],
+                 size_t[] 
+"$*1_type *"
 
 // Booleans
 %typemap(imtype) bool               					"BOOL"
@@ -110,19 +135,19 @@ ADD_NAMESPACE_PREFIX()
 	      	 const size_t &,  			size_t &
 %{ $1 = ($1_ltype)$input; %}
 
-%typemap(in) const signed char *, 		signed char *,           
- 	const unsigned char *, 	        unsigned char *,         
- 	const short *,				short *,                 
- 	const unsigned short *,	        unsigned short *,        
- 	const int *,		    	int *,                   
- 	const unsigned int *,		unsigned int *,          
- 	const long *,				long *,                 
- 	const unsigned long *, 	        unsigned long *,         
- 	const long long *, 		long long *,             
- 	const unsigned long long *,     unsigned long long *,    
- 	const float *, 			float *,               
- 	const double *,  	        double *,
- 	const size_t *,  	        size_t *
+%typemap(in) const signed char *,       signed char *,
+    const unsigned char *,              unsigned char *,
+    const short *,                      short *,
+    const unsigned short *,             unsigned short *,
+    const int *,                        int *,
+    const unsigned int *,               unsigned int *,
+    const long *,                       long *,
+    const unsigned long *,              unsigned long *,
+    const long long *,                  long long *,
+    const unsigned long long *,         unsigned long long *,
+    const float *,                      float *,
+    const double *,                     double *,
+    const size_t *,                     size_t *
 %{ $1 = ($1_ltype)$input;%}
 
 //Booleans:
@@ -308,8 +333,32 @@ ADD_NAMESPACE_PREFIX()
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
 %typemap(objcclasstype) SWIGTYPE                        "$objcclassname"
 
-%typemap(objctype) bool*,unsigned char*,short*,unsigned short*,int*,unsigned int*,long unsigned long*,long long*,unsigned long long*,float*,double*,size_t*             "$1_type"
-%typemap(objctype) bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[] "$*1_type *"
+%typemap(objctype) bool*,
+                   unsigned char*,
+                   short*,
+                   unsigned short*,
+                   int*,
+                   unsigned int*,
+                   long unsigned long*,
+                   long long*,
+                   unsigned long long*,
+                   float*,
+                   double*,
+                   size_t*
+"$1_type"
+%typemap(objctype) bool[],
+                   unsigned char[],
+                   short[],
+                   unsigned short[],
+                   int[],
+                   unsigned int[],
+                   long unsigned long[],
+                   long long[],
+                   unsigned long long[],
+                   float[],
+                   double[],
+                   size_t[]
+"$*1_type *"
 
 // C/C++ Pointers are treated as  as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE *                           "$objcclassname*"
@@ -354,8 +403,8 @@ ADD_NAMESPACE_PREFIX()
 %typemap(objcin) void ""
 
 // References: are treated as pointers in the proxy layer (ObjectiveC)
-%typemap(objcin) const bool &,                  bool &, 
-                 const char &,  		char &,
+%typemap(objcin) const bool &,          bool &, 
+             const char &,  		    char &,
 	     	 const signed char &, 		signed char &,
 	         const unsigned char &, 	unsigned char &,
 		     const short &,				short &,
@@ -372,22 +421,33 @@ ADD_NAMESPACE_PREFIX()
 "$objcinput"
 
 // C/C++ pointers to primitive types are treated as is in the Proxy layer.
-%typemap(objcin)const bool *,              bool *,
-    const char *, char *,
-    const signed char *, signed char *,
-    const unsigned char *,  unsigned char *,
-    const short *, short *,
-    const unsigned short *, unsigned short *,
-    const int *, int *,
-    const unsigned int *, unsigned int *,
-    const long *, long &,
-    const unsigned long *, unsigned long &,
-    const long long *, long long *,
-    const unsigned long long *,unsigned long long *,
-    const float *, float *,
-    const double *, double *,
-    const size_t *, size_t *,
-    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[]
+%typemap(objcin)const bool *,           bool *,
+             const char *,              char *,
+             const signed char *,       signed char *,
+             const unsigned char *,     unsigned char *,
+             const short *,             short *,
+             const unsigned short *,    unsigned short *,
+             const int *,               int *,
+             const unsigned int *,      unsigned int *,
+             const long *,              long &,
+             const unsigned long *,     unsigned long &,
+             const long long *,         long long *,
+             const unsigned long long *,unsigned long long *,
+             const float *,             float *,
+             const double *,            double *,
+             const size_t *,            size_t *,
+             bool[],
+             unsigned char[],
+             short[],
+             unsigned short[],
+             int[],
+             unsigned int[],
+             long unsigned long[],
+             long long[],
+             unsigned long long[],
+             float[],
+             double[],
+             size_t[]
 "$objcinput"
 
 //C strings:
@@ -413,57 +473,68 @@ ADD_NAMESPACE_PREFIX()
 
 // Primary types are exported as ObjectiveC primary types
 %typemap(objcout) bool,
-		char,
-	      signed char,
-	      unsigned char,
-	      short,
-	      unsigned short,
-	      int,
-	      unsigned int,
-	      long,
-	      unsigned long,
-	      long long,
-	      unsigned long long,
-	      float,
-	      double,
-	      size_t
+		    char,
+	        signed char,
+	        unsigned char,
+	        short,
+	        unsigned short,
+	        int,
+	        unsigned int,
+	        long,
+	        unsigned long,
+	        long long,
+	        unsigned long long,
+	        float,
+	        double,
+	        size_t
 %{ return $imcall; %}
 
 %typemap(objcout) void "$imcall;"
 
 %typemap(objcout) const bool &,         bool &,
-    const char &,     char &,
-    const signed char &,   signed char &,
-    const unsigned char &,  unsigned char &,
-    const short &,    short &,
-    const unsigned short &, unsigned short &,
-    const int &,       int &,
-    const unsigned int &,  unsigned int &,
-    const long &,    long &,
-    const unsigned long &,  unsigned long &,
-    const long long &,   long long &,
-    const unsigned long long &,unsigned long long &,
-    const float &,    float &,
-    const double &,     double &,
-    const size_t &,     size_t &
+             const char &,              char &,
+             const signed char &,       signed char &,
+             const unsigned char &,     unsigned char &,
+             const short &,             short &,
+             const unsigned short &,    unsigned short &,
+             const int &,               int &,
+             const unsigned int &,      unsigned int &,
+             const long &,              long &,
+             const unsigned long &,     unsigned long &,
+             const long long &,         long long &,
+             const unsigned long long &,unsigned long long &,
+             const float &,             float &,
+             const double &,            double &,
+             const size_t &,            size_t &
 %{ return $imcall; %}
 
-%typemap(objcout)const bool *,              bool *,
-    const char *,     char *,
-    const signed char *,   signed char *,
-    const unsigned char *,  unsigned char *,
-    const short *,    short *,
-    const unsigned short *, unsigned short *,
-    const int *,       int *,
-    const unsigned int *,  unsigned int *,
-    const long *,    long *,
-    const unsigned long *,  unsigned long *,
-    const long long *,   long long *,
-    const unsigned long long *,unsigned long long *,
-    const float *,    float *,
-    const double *,     double *,
-    const size_t *,     size_t *,
-    bool[],unsigned char[],short[],unsigned short[],int[],unsigned int[],long unsigned long[],long long[],unsigned long long[],float[],double[],size_t[]
+%typemap(objcout)const bool *,          bool *,
+             const char *,              char *,
+             const signed char *,       signed char *,
+             const unsigned char *,     unsigned char *,
+             const short *,             short *,
+             const unsigned short *,    unsigned short *,
+             const int *,               int *,
+             const unsigned int *,      unsigned int *,
+             const long *,              long *,
+             const unsigned long *,     unsigned long *,
+             const long long *,         long long *,
+             const unsigned long long *,unsigned long long *,
+             const float *,             float *,
+             const double *,            double *,
+             const size_t *,            size_t *,
+             bool[],
+             unsigned char[],
+             short[],
+             unsigned short[],
+             int[],
+             unsigned int[],
+             long unsigned long[],
+             long long[],
+             unsigned long long[],
+             float[],
+             double[],
+             size_t[]
 %{ return $imcall; %}
 
 // C strings: 
@@ -581,4 +652,6 @@ ADD_NAMESPACE_PREFIX()
 
 // ObjectiveC runtime support code.
 %include <objcruntime.swg>
+
+// List of all reserved ObjectiveC keywords.
 %include <objckw.swg>
