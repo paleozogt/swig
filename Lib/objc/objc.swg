@@ -40,6 +40,38 @@ ADD_NAMESPACE_PREFIX()
 %typemap(imtype) size_t             "size_t"
 %typemap(imtype) void               "void"
 
+// References to primitive types are treated as pointers in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) char &                     "char *"
+%typemap(imtype) signed char &              "signed char *"
+%typemap(imtype) unsigned char &            "unsigned char *"
+%typemap(imtype) short &                    "short *"
+%typemap(imtype) unsigned short &           "unsigned short *"
+%typemap(imtype) int &                      "int *"
+%typemap(imtype) unsigned int &             "unsigned int *"
+%typemap(imtype) long &                     "long *"
+%typemap(imtype) unsigned long &            "unsigned long  *"
+%typemap(imtype) long long &                "long long *"
+%typemap(imtype) unsigned long long &       "unsigned long long  *"
+%typemap(imtype) float &                    "float *"
+%typemap(imtype) double &                   "double *"
+%typemap(imtype) size_t &                   "size_t *"
+
+// References to primitive types are treated as pointers in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) const char &               "const char *"
+%typemap(imtype) const signed char &        "const signed char *"
+%typemap(imtype) const unsigned char &      "const unsigned char *"
+%typemap(imtype) const short &              "const short *"
+%typemap(imtype) const unsigned short &     "const unsigned short *"
+%typemap(imtype) const int &                "const int *"
+%typemap(imtype) const unsigned int &       "const unsigned int *"
+%typemap(imtype) const long &               "const long *"
+%typemap(imtype) const unsigned long &      "const unsigned long  *"
+%typemap(imtype) const long long &          "const long long *"
+%typemap(imtype) const unsigned long long & "const unsigned long long  *"
+%typemap(imtype) const float &              "const float *"
+%typemap(imtype) const double &             "const double *"
+%typemap(imtype) const size_t &             "const size_t *"
+
 %typemap(imtype) bool*,
                  unsigned char*,
                  short*,
@@ -325,6 +357,40 @@ ADD_NAMESPACE_PREFIX()
 %typemap(objctype)  double             "double"
 %typemap(objctype)  size_t             "size_t"
 %typemap(objctype)  void               "void"
+
+// References will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) bool &                     "BOOL *"
+%typemap(objctype) char &                     "char *"
+%typemap(objctype) signed char &              "signed char *"
+%typemap(objctype) unsigned char &            "unsigned char *"
+%typemap(objctype) short &                    "short *"
+%typemap(objctype) unsigned short &           "unsigned short *"
+%typemap(objctype) int &                      "int *"
+%typemap(objctype) unsigned int &             "unsigned int *"
+%typemap(objctype) long &                     "long *"
+%typemap(objctype) unsigned long &            "unsigned long  *"
+%typemap(objctype) long long &                "long long *"
+%typemap(objctype) unsigned long long &       "unsigned long long  *"
+%typemap(objctype) float &                    "float *"
+%typemap(objctype) double &                   "double *"
+%typemap(objctype) size_t &                   "size_t *"
+
+// References will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) const bool &               "const BOOL *"
+%typemap(objctype) const char &               "const char *"
+%typemap(objctype) const signed char &        "const signed char *"
+%typemap(objctype) const unsigned char &      "const unsigned char *"
+%typemap(objctype) const short &              "const short *"
+%typemap(objctype) const unsigned short &     "const unsigned short *"
+%typemap(objctype) const int &                "const int *"
+%typemap(objctype) const unsigned int &       "const unsigned int *"
+%typemap(objctype) const long &               "const long *"
+%typemap(objctype) const unsigned long &      "const unsigned long  *"
+%typemap(objctype) const long long &          "const long long *"
+%typemap(objctype) const unsigned long long & "const unsigned long long  *"
+%typemap(objctype) const float &              "const float *"
+%typemap(objctype) const double &             "const double *"
+%typemap(objctype) const size_t &             "const size_t *"
 
 //C strings:
 %typemap(objctype) char *, const char *, char *&, char[ANY], char[]    "NSString *"
