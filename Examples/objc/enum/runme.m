@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
  	NSLog(@"speed::LUDICROUS =%d",Foo_LUDICROUS);
 
 	NSLog(@"\nTesting use of enums with global function\n");
-	ObjcEnum_test(RED,Foo_IMPULSE);
-  	ObjcEnum_test(BLUE,Foo_WARP);
-  	ObjcEnum_test(GREEN,Foo_LUDICROUS);
+	[example enum_test:RED s:Foo_IMPULSE];
+  	[example enum_test:BLUE s:Foo_WARP];
+  	[example enum_test:GREEN s:Foo_LUDICROUS];
    
   	NSLog(@"\nTesting use of enum with class method" );
   	Foo* f = [[Foo alloc] init];
