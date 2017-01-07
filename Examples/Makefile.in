@@ -1430,7 +1430,6 @@ csharp_clean:
 ##################################################################
 OBJC = @OBJC@
 OBJCXXSRCS = $(INTERFACE:.i=_wrap.mm) $(INTERFACE:.i=_proxy.mm)
-OBJCSRCS = $(INTERFACE:.i=.m)
 OBJCXXOBJS = $(OBJCXXSRCS:.mm=.@OBJEXT@)
 OBJCINCLUDES = @OBJCINC@
 OBJCDLINK = @OBJCDYNAMICLINKING@
