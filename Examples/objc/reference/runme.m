@@ -14,7 +14,7 @@ NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
         
     // Call an overloaded operator
     NSLog(@"Adding a+b \n");
-    Vector *v3 =ObjcAddv(v1 ,v2);
+    Vector *v3 =[example addv:v1 b:v2];
     NSLog(@"a+b =   %@",[v3 print]);
         
     // Create a vector Array
@@ -25,7 +25,7 @@ NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
     // Copy the value of v1 and v2 to a vector array
     [va set:0 a:v1];
     [va set:1 a:v2];
-    [va set:2 a:ObjcAddv(v1,v2)];
+    [va set:2 a:[example addv:v1 b:v2]];
         
     // Get some values from the array
     NSLog(@"Getting some array values \n");
