@@ -5,8 +5,8 @@ int main(int argc, char* argv[]) {
 	NSAutoreleasePool *pool =[[NSAutoreleasePool alloc]init];
 	
 	//Call some templated functions
-    NSLog(@"The value returned by maxint is %i",ObjcMaxint(3,7));
-    NSLog(@"The value returned by maxdouble is %g",ObjcMaxdouble(3.14,2.18));
+    NSLog(@"The value returned by maxint is %i",[example maxint:3 b:7]);
+    NSLog(@"The value returned by maxdouble is %g",[example maxdouble:3.14 b:2.18]);
 
 
     //Create some class

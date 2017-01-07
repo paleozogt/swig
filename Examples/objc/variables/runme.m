@@ -3,63 +3,64 @@
 
 int main(int argc, char* argv[]) {
 	NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
+
 	//Try to set the values of global variables
-	setIvar(42);
-	setSvar(-31000);
-	setLvar(65537);
-	setUivar(123456);
-	setUsvar(61000);
-	setUlvar(654321);
-	setScvar(-13);
-	setUcvar(251);
-	setDvar(0);
-	setCvar('S');
-	setFvar(3.14159);		 
-	setStrvar(@"Hello World");
-	setIptrvar(ObjcNew_int(37));
-	setPtptr(ObjcNew_TPoint(37,42));
-	setName(@"Bill");
+	[example setIvar:42];
+	[example setSvar:-31000];
+	[example setLvar:65537];
+	[example setUivar:123456];
+	[example setUsvar:61000];
+	[example setUlvar:654321];
+	[example setScvar:-13];
+	[example setUcvar:251];
+	[example setDvar:0];
+	[example setCvar:'S'];
+	[example setFvar:3.14159];
+	[example setStrvar:@"Hello World"];
+	[example setIptrvar:[example new_int:37]];
+	[example setPtptr:[example new_TPoint:37 y:42]];
+	[example setName:@"Bill"];
 	
 	//Now print out the values of variables
 	
 	NSLog(@"Variables (values printed from Objective C)\n");
 	
-	NSLog(@"ivar      = %i\n",getIvar());
-	NSLog(@"svar      = %i\n", getSvar());
-	NSLog(@"lvar      = %li\n", getLvar());
-	NSLog(@"uivar     = %u\n", getUivar());
-	NSLog(@"usvar     = %u\n", getUsvar());
-	NSLog(@"ulvar     = %lu\n", getUlvar());
-	NSLog(@"scvar     = %i\n", getScvar());
-	NSLog(@"ucvar     = %u\n", getUcvar());
-	NSLog(@"fvar      = %g\n", getFvar());
-	NSLog(@"dvar      = %g\n", getDvar());
-	NSLog(@"cvar      = %c\n", getCvar());
-	NSLog(@"strvar    = %@\n", getStrvar());
-	NSLog(@"iptrvar    =%p\n", getIptrvar());
-	NSLog(@"name      = %@\n", getName());
-	NSLog(@"ptptr     = %p %@\n", getPtptr(), ObjcTPoint_print(getPtptr()));	
-        NSLog(@"pt        ="); ObjcPt_print();
-	NSLog(@"status    = %d\n", getStatus());
+	NSLog(@"ivar      = %i\n",[example getIvar]);
+	NSLog(@"svar      = %i\n", [example getSvar]);
+	NSLog(@"lvar      = %li\n", [example getLvar]);
+	NSLog(@"uivar     = %u\n", [example getUivar]);
+	NSLog(@"usvar     = %u\n", [example getUsvar]);
+	NSLog(@"ulvar     = %lu\n", [example getUlvar]);
+	NSLog(@"scvar     = %i\n", [example getScvar]);
+	NSLog(@"ucvar     = %u\n", [example getUcvar]);
+	NSLog(@"fvar      = %g\n", [example getFvar]);
+	NSLog(@"dvar      = %g\n", [example getDvar]);
+	NSLog(@"cvar      = %c\n", [example getCvar]);
+	NSLog(@"strvar    = %@\n", [example getStrvar]);
+	NSLog(@"iptrvar    =%p\n", [example getIptrvar]);
+	NSLog(@"name      = %@\n", [example getName]);
+	NSLog(@"ptptr     = %p %@\n", [example getPtptr], [example TPoint_print:[example getPtptr]]);	
+	NSLog(@"pt        ="); [example pt_print];
+	NSLog(@"status    = %d\n", [example getStatus]);
 	
 	
 	NSLog(@"\nVariables (values printed from C)\n");
-	ObjcPrint_vars();
+	[example print_vars];
 	
-        // This line would not compile: since status is marked with
-	// %immutable, there is no SetStatus function.
+    // This line would not compile: since status is marked with
+	// %immutable, there is no [example setStatus] function.
 	// NSLog(@"\nNow I'm going to try and modify some read only variables")
-	// setStatus(0)
+	// [example setStatus:0]
 		
 	NSLog(@"\nI'm going to try and update a structure variable.\n");
 	
-	setPt((struct SWIGTYPE_TPoint*)getPtptr());
+	[example setPt:(SWIGTYPE_TPoint*)[example getPtptr]];
 	
 	NSLog(@"The new value is \n");
 	
-	ObjcPt_print();
-	NSLog(@"You should see the value %@",ObjcTPoint_print(getPtptr())); 
+	[example pt_print];
+	NSLog(@"You should see the value %@",[example TPoint_print:[example getPtptr]]); 
         
-        [pool drain];
+    [pool drain];
 	return 0;
 }
