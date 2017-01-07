@@ -1,6 +1,9 @@
 #include "swigmod.h"
 #include <ctype.h>
 
+#define OBJCPP_EXT "mm"
+#define OBJC_EXT   "m"
+
 class OBJECTIVEC:public Language {
 private:
   /* Files and file sections containing generated code. */
@@ -188,7 +191,7 @@ String *getOverloadedName(Node *n) {
 void OBJECTIVEC::main(int argc, char *argv[]) {
   // Set language-specific subdirectory in SWIG library
   SWIG_library_directory("objc");
-  SWIG_config_cppext("mm");
+  SWIG_config_cppext(OBJCPP_EXT);
 
   // Process command line options
   for (int i = 1; i < argc; i++) {
@@ -241,6 +244,8 @@ int OBJECTIVEC::top(Node *n) {
   }
 
   /* Initialize I/O */
+  String *basename= Swig_file_basename(Getattr(n, "outfile"));
+  String *ext= Swig_file_extension(Getattr(n, "outfile"));
 
   // Create the _wrap files
   String *wrapfile_h = Getattr(n, "outfile_h");
@@ -249,7 +254,8 @@ int OBJECTIVEC::top(Node *n) {
     FileErrorDisplay(wrapfile_h);
     SWIG_exit(EXIT_FAILURE);
   }
-  String *wrapfile_mm = Getattr(n, "outfile");
+
+  String *wrapfile_mm = NewStringf("%s.%s", basename, OBJCPP_EXT);
   f_wrap_mm = NewFile(wrapfile_mm, "w", SWIG_output_files());
   if (!f_wrap_mm) {
     FileErrorDisplay(wrapfile_mm);
@@ -258,10 +264,9 @@ int OBJECTIVEC::top(Node *n) {
   Delete(wrapfile_h);
   Delete(wrapfile_mm);
 
-  String *basename= NewStringf("%s", Swig_file_basename(wrapfile_h));
   Replaceall(basename, "_wrap", "");
   String *proxyfile_h = NewStringf("%s_proxy.h", basename);
-  String *proxyfile_mm = NewStringf("%s_proxy.mm", basename);
+  String *proxyfile_mm = NewStringf("%s_proxy.%s", basename, OBJCPP_EXT);
 
   // Create the _proxy files if proxy flag is true
   if (proxy_flag) {
