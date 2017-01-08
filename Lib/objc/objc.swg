@@ -100,6 +100,20 @@ ADD_NAMESPACE_PREFIX()
                  size_t[] 
 "$*1_type *"
 
+%typemap(imtype) bool[ANY],
+                 unsigned char[ANY],
+                 short[ANY],
+                 unsigned short[ANY],
+                 int[ANY],
+                 unsigned int[ANY],
+                 long unsigned long[ANY],
+                 long long[ANY],
+                 unsigned long long[ANY],
+                 float[ANY],
+                 double[ANY],
+                 size_t[ANY] 
+"$*1_type *"
+
 // Booleans
 %typemap(imtype) bool               					"BOOL"
 %typemap(imtype) const bool &, bool &, const bool *, bool *             "BOOL *"
@@ -412,6 +426,7 @@ ADD_NAMESPACE_PREFIX()
                    double*,
                    size_t*
 "$1_type"
+
 %typemap(objctype) bool[],
                    unsigned char[],
                    short[],
@@ -424,6 +439,20 @@ ADD_NAMESPACE_PREFIX()
                    float[],
                    double[],
                    size_t[]
+"$*1_type *"
+
+%typemap(objctype) bool[ANY],
+                   unsigned char[ANY],
+                   short[ANY],
+                   unsigned short[ANY],
+                   int[ANY],
+                   unsigned int[ANY],
+                   long unsigned long[ANY],
+                   long long[ANY],
+                   unsigned long long[ANY],
+                   float[ANY],
+                   double[ANY],
+                   size_t[ANY]
 "$*1_type *"
 
 // C/C++ Pointers are treated as  as pointers in ObjectiveC
