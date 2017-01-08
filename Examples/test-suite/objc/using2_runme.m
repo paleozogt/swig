@@ -3,7 +3,7 @@
 int main(int argc,char* argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
-assert(ObjcSpam(37)==37);
+assert([using2 spam:37]==37);
 [pool drain];
 return 0;
 }

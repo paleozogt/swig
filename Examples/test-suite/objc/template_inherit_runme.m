@@ -37,22 +37,22 @@ assert([t isEqualToString:@"foomethod"]);
 t=[f foomethod];
 assert([t isEqualToString:@"foomethod"]); 
 
-t=ObjcInvoke_blah_int(a);
+t=[template_inherit invoke_blah_int:a];
 assert([t isEqualToString:@"Foo"]); 
 	
-t=ObjcInvoke_blah_int(c);
+t=[template_inherit invoke_blah_int:c];
 assert([t isEqualToString:@"Bar"]); 
 
-t=ObjcInvoke_blah_double(b);
+t=[template_inherit invoke_blah_double:b];
 assert([t isEqualToString:@"Foo"]); 
 
-t=ObjcInvoke_blah_double(d);
+t=[template_inherit invoke_blah_double:d];
 assert([t isEqualToString:@"Bar"]); 
 
-t=ObjcInvoke_blah_uint(e);
+t=[template_inherit invoke_blah_uint:e];
 assert([t isEqualToString:@"Foo"]); 
 	
-t=ObjcInvoke_blah_uint(f);
+t=[template_inherit invoke_blah_uint:f];
 assert([t isEqualToString:@"Bar"]); 
 
 [a release];

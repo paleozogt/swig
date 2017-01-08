@@ -4,7 +4,7 @@ int main(int argc, char* argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
 Bar *bar =[[Bar alloc]init];
-NSString *t= ObjcDo_blah(bar);
+NSString *t= [class_ignore do_blah:bar];
 assert([t isEqualToString:@"Bar::blah"]);
 
 [bar release];
