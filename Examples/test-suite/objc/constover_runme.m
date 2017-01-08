@@ -5,9 +5,9 @@ int main(int argc ,char *argv[ ])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
 NSString *p1;
-p1=ObjcTest(@"test");
+p1=[constover test:@"test"];
 assert([p1 isEqualToString:@"test"]);
-p1=ObjcTest_pconst(@"test_pconst");
+p1=[constover test_pconst:@"test_pconst"];
 assert([p1 isEqualToString:@"test_pconst"]);	
 			 
 Foo *foo =[[Foo alloc]init];

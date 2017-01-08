@@ -3,13 +3,13 @@
 int main(int argc,char *argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
-if(ObjcAdd(30,2) !=32)
+if([sneaky1 add:30 arg1:2] !=32)
 NSLog(@"add test failed");
-if(ObjcSubtract(20,2) !=18)
+if([sneaky1 subtract:20 arg1:2] !=18)
 NSLog(@"subtract test failed");
-if(ObjcMul(20,2) !=40)
+if([sneaky1 mul:20 arg1:2] !=40)
 NSLog(@"mul test failed");
-if(ObjcDivide(20,2) !=10)
+if([sneaky1 divide:20 arg1:2] !=10)
 NSLog(@"div test failed");
 
 [pool drain];
