@@ -14,11 +14,11 @@ if (getBool2() != NO)
     NSLog(@"Runtime test 3 failed\n");
     
 //bool functions check
-BOOL b1= ObjcBo(NO);
+BOOL b1= [bools bo:NO];
 if (b1 != NO)
     NSLog(@"Runtime test 4 failed\n");
     
-BOOL b2=ObjcBo(YES);
+BOOL b2=[bools bo:YES];
 if (b2 != YES)
     NSLog(@"Runtime test 5 failed\n");
     

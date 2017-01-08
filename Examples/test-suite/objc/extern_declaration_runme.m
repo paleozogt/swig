@@ -2,11 +2,11 @@
 int main(int argc,char *argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
-if(ObjcExternimport(100) !=100)
+if([extern_declaration externimport:100] !=100)
 NSLog(@"extern import called");
-if(ObjcExternexport(200) !=200)
+if([extern_declaration externexport:200] !=200)
 NSLog(@"externexport failed");
-if(ObjcExternstdcall(300) !=300)
+if([extern_declaration externstdcall:300] !=300)
 NSLog(@"externstdcall failed");
 
 [pool drain];

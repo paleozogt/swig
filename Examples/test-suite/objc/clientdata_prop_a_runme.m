@@ -2,9 +2,9 @@
 int main(int argc,char* argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
-A *a=ObjcNew_tA();
-ObjcTest_tA(a);
-ObjcTest_A(a);
+A *a=[clientdata_prop_a new_tA];
+[clientdata_prop_a test_tA:a];
+[clientdata_prop_a test_A:a];
 
 [pool drain];
 return 0;

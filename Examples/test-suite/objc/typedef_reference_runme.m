@@ -4,10 +4,10 @@
 int main(int argc,char* argv[])
 {
 NSAutoreleasePool *pool=[[NSAutoreleasePool alloc]init];
-int *int2=ObjcCopy_intp(2);
-assert(ObjcSomefunc(int2) ==2);
-int *int3=ObjcCopy_intp(3);
-assert(ObjcSomefunc(int3) ==3);
+int *int2=[typedef_reference copy_intp:2];
+assert([typedef_reference somefunc:int2] ==2);
+int *int3=[typedef_reference copy_intp:3];
+assert([typedef_reference somefunc:int3] ==3);
 [pool drain];
 return 0;
 }
