@@ -316,6 +316,18 @@ int OBJECTIVEC::top(Node *n) {
     Printf(f_proxy_h, "extern \"C\" {\n");
     Printf(f_proxy_h, "#endif\n\n");
 
+    // from http://nshipster.com/ns_enum-ns_options/
+    Printf(f_proxy_h,
+           "#ifndef NS_ENUM\n"
+           "#define NS_ENUM(_type, _name) enum _name : _type _name; enum _name : _type\n"
+           "#endif\n"
+           "\n"
+           "#ifndef NS_OPTIONS\n"
+           "#define NS_OPTIONS(_type, _name) enum _name : _type _name; enum _name : _type\n"
+           "#endif\n"
+           "\n"
+    );
+
     Swig_banner(f_proxy_mm);
     Printf(f_proxy_mm, "#include \"%s\"\n", Swig_file_filename(proxyfile_h));
     Printf(f_proxy_mm, "#include \"%s\"\n\n", Swig_file_filename(wrapfile_h));
@@ -666,6 +678,13 @@ int OBJECTIVEC::classHandler(Node *n) {
   return SWIG_OK;
 }
 
+/*
+ * Detects whether an enum value is constructed via bit shifting/masking operators.
+ */
+inline bool isBitMaskEnum(String *value) {
+  return Strstr(value, "<<") != NULL || Strstr(value, ">>") || Strstr(value, "&") || Strstr(value, "|");
+}
+
 /* ----------------------------------------------------------------------
  * enumDeclaration()
  *
@@ -691,10 +710,17 @@ int OBJECTIVEC::enumDeclaration(Node *n) {
     enumname = Copy(symname);
   }
 
+  // check if any of the children are doing bitmasking
+  bool hasBitMaskValue= false;
+  for (Node *c = firstChild(n); c; c = nextSibling(c)) {
+    hasBitMaskValue|= isBitMaskEnum(Getattr(c, "enumvalue"));
+  }
+
   if (proxy_flag) {
     if (typemap_lookup_type) {
-      // Copy-paste the C/C++ enum as an Objective-C enum
-      Printv(proxy_h_code, "enum ", enumname, " {\n", NIL);
+      // C/C++ enum as an Objective-C enum
+      const char *enumDecl= hasBitMaskValue ? "NS_OPTIONS(NSUInteger" : "NS_ENUM(NSInteger";
+      Printf(proxy_h_code, "typedef %s, %s) {\n", enumDecl, enumname);
     } else {
       // Handle anonymous enums.
       Printv(proxy_h_code, "\nenum {\n", NIL);
@@ -752,6 +778,7 @@ int OBJECTIVEC::enumvalueDeclaration(Node *n) {
       Printf(proxy_h_code, " = %s", value);
     }
   }
+
   // Keep track that the currently processed enum has at least one value
   SetFlag(parent, "nonempty");
 
@@ -1733,9 +1760,9 @@ void OBJECTIVEC::substituteClassnameVariable(String *tm, const char *classnameva
     if (p && !Strcmp(nodeType(p), "class")) {
       // This is a nested enum.
       String *parent_name = Getattr(p, "sym:name");
-      type_name = NewStringf("enum %s_%s", parent_name, enum_name);
+      type_name = NewStringf("%s_%s", parent_name, enum_name);
     } else {
-      type_name = NewStringf("enum %s", enum_name);
+      type_name = NewStringf("%s", enum_name);
     }
   } else {
     String *class_name = createProxyName(type);
