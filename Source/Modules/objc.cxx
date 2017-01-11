@@ -4,6 +4,26 @@
 #define OBJCPP_EXT "mm"
 #define OBJC_EXT   "m"
 
+#define EXCEPTION_ADAPT_DECL "+(BOOL)tryBlock:(void(^)())tryBlock error:(__autoreleasing NSError **)error;"
+#define EXCEPTION_ADAPT_DEFN \
+    "+(BOOL)tryBlock:(void(^)())tryBlock error:(__autoreleasing NSError **)error {\n"\
+    "    @try {\n"\
+    "        tryBlock();\n"\
+    "        return YES;\n"\
+    "    }\n"\
+    "    @catch (NSException *exception) {\n"\
+    "        NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:exception.userInfo];\n"\
+    "        [userInfo setValue:exception.reason forKey:NSLocalizedDescriptionKey];\n"\
+    "        [userInfo setValue:exception.name forKey:NSUnderlyingErrorKey];\n"\
+    "\n"\
+    "        *error = [[NSError alloc] initWithDomain:exception.name\n"\
+    "                                            code:0\n"\
+    "                                        userInfo:userInfo];\n"\
+    "        return NO;\n"\
+    "    }\n"\
+    "}\n"
+
+
 class OBJECTIVEC:public Language {
 private:
   /* Files and file sections containing generated code. */
@@ -353,8 +373,8 @@ int OBJECTIVEC::top(Node *n) {
     proxy_class_enums_code = NewString("");
     proxy_class_function_decls = NewString("");
     proxy_class_function_defns = NewString("");
-    proxy_global_function_decls = NewStringf("NS_SWIFT_NAME(%s)\n@interface %s : NSObject\n", module, prefixed_module);
-    proxy_global_function_defns = NewStringf("@implementation %s\n", prefixed_module);
+    proxy_global_function_decls = NewStringf("NS_SWIFT_NAME(%s)\n@interface %s : NSObject\n%s\n", module, prefixed_module, EXCEPTION_ADAPT_DECL);
+    proxy_global_function_defns = NewStringf("@implementation %s\n%s", prefixed_module, EXCEPTION_ADAPT_DEFN);
     proxy_class_imports = NewString("");
 
     destrcutor_call = NewString("");
