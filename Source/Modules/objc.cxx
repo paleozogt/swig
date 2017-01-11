@@ -316,7 +316,7 @@ int OBJECTIVEC::top(Node *n) {
     Printf(f_proxy_h, "extern \"C\" {\n");
     Printf(f_proxy_h, "#endif\n\n");
 
-    // from http://nshipster.com/ns_enum-ns_options/
+    // no-op #defines for old compilers
     Printf(f_proxy_h,
            "#ifndef NS_ENUM\n"
            "#define NS_ENUM(_type, _name) enum _name : _type _name; enum _name : _type\n"
@@ -324,6 +324,10 @@ int OBJECTIVEC::top(Node *n) {
            "\n"
            "#ifndef NS_OPTIONS\n"
            "#define NS_OPTIONS(_type, _name) enum _name : _type _name; enum _name : _type\n"
+           "#endif\n"
+           "\n"
+           "#ifndef NS_SWIFT_NAME\n"
+           "#define NS_SWIFT_NAME(_name)\n"
            "#endif\n"
            "\n"
     );
@@ -349,7 +353,7 @@ int OBJECTIVEC::top(Node *n) {
     proxy_class_enums_code = NewString("");
     proxy_class_function_decls = NewString("");
     proxy_class_function_defns = NewString("");
-    proxy_global_function_decls = NewStringf("@interface %s : NSObject\n", prefixed_module);
+    proxy_global_function_decls = NewStringf("NS_SWIFT_NAME(%s)\n@interface %s : NSObject\n", module, prefixed_module);
     proxy_global_function_defns = NewStringf("@implementation %s\n", prefixed_module);
     proxy_class_imports = NewString("");
 
@@ -710,6 +714,9 @@ int OBJECTIVEC::enumDeclaration(Node *n) {
     enumname = Copy(symname);
   }
 
+  String *swiftenumname= NewString(symname);
+  if (namespace_prefix) Replaceall(swiftenumname, namespace_prefix, "");
+
   // check if any of the children are doing bitmasking
   bool hasBitMaskValue= false;
   for (Node *c = firstChild(n); c; c = nextSibling(c)) {
@@ -737,7 +744,7 @@ int OBJECTIVEC::enumDeclaration(Node *n) {
   if (proxy_flag) {
     if (typemap_lookup_type) {
       // Finish the enum declaration
-      Printv(proxy_h_code, "\n};\n\n", NIL);
+      Printf(proxy_h_code, "\n} NS_SWIFT_NAME(%s);\n\n", swiftenumname);
     } else {
       // Handle anonymous enums.
       Printv(proxy_h_code, "\n};\n\n", NIL);
@@ -772,7 +779,7 @@ int OBJECTIVEC::enumvalueDeclaration(Node *n) {
   if (proxy_flag) {		// Emit the enum item
     if (!GetFlag(n, "firstenumitem"))
       Printf(proxy_h_code, ",\n");
-    Printf(proxy_h_code, "  %s", enumname);
+    Printf(proxy_h_code, "  %s NS_SWIFT_NAME(%s)", enumname, symname);
     if (value) {
       value = Getattr(n, "enumvalue") ? Copy(Getattr(n, "enumvalue")) : Copy(Getattr(n, "enumvalueex"));
       Printf(proxy_h_code, " = %s", value);
@@ -1618,11 +1625,10 @@ void OBJECTIVEC::emitProxyClass(Node *n) {
   // the class interface
   Printv(proxy_class_fwd_decl_code, "@class $objcclassname;\n", NIL);
   Printv(proxy_class_decl_code, proxy_class_imports, proxy_class_enums_code,
-	 objcinterfacemodifier, " $objcclassname",
+	 "NS_SWIFT_NAME($swiftclassname)\n", objcinterfacemodifier, " $objcclassname",
 	 (*Char(wanted_base) || *Char(protocols)) ? " : " : "", wanted_base,
 	 (*Char(wanted_base) && *Char(protocols)) ? ", " : "", protocols,
 	 objcinterfacecode, proxy_class_function_decls, destructor_decl, "\n", typemapLookup(n, "objcclassclose", typemap_lookup_type, WARN_NONE), "\n\n", NIL);
-
 
   /* Write the proxy class definition */
   // Class modifiers.
@@ -1643,6 +1649,12 @@ void OBJECTIVEC::emitProxyClass(Node *n) {
   Replaceall(proxy_class_fwd_decl_code, "$objcbaseclass", proxy_class_name);
   Replaceall(proxy_class_decl_code    , "$objcbaseclass", proxy_class_name);
   Replaceall(proxy_class_defn_code    , "$objcbaseclass", proxy_class_name);
+
+  String *swift_class_name= NewString(proxy_class_name);
+  if (namespace_prefix) Replaceall(swift_class_name, namespace_prefix, "");
+  Replaceall(proxy_class_fwd_decl_code, "$swiftclassname", swift_class_name);
+  Replaceall(proxy_class_decl_code    , "$swiftclassname", swift_class_name);
+  Replaceall(proxy_class_defn_code    , "$swiftclassname", swift_class_name);
 
   Delete(baseclass);
   Delete(destructor_decl);
