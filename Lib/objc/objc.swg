@@ -72,47 +72,102 @@ ADD_NAMESPACE_PREFIX()
 %typemap(imtype) const double &             "const double *"
 %typemap(imtype) const size_t &             "const size_t *"
 
-%typemap(imtype) bool*,
-                 unsigned char*,
-                 short*,
-                 unsigned short*,
-                 int*,
-                 unsigned int*,
-                 long unsigned long*,
-                 long long*,
-                 unsigned long long*,
-                 float*,
-                 double*,
-                 size_t*
-"$1_type"
+// Pointers to primitive types are treated as pointers in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) char *                     "char *"
+%typemap(imtype) signed char *              "signed char *"
+%typemap(imtype) unsigned char *            "unsigned char *"
+%typemap(imtype) short *                    "short *"
+%typemap(imtype) unsigned short *           "unsigned short *"
+%typemap(imtype) int *                      "int *"
+%typemap(imtype) unsigned int *             "unsigned int *"
+%typemap(imtype) long *                     "long *"
+%typemap(imtype) unsigned long *            "unsigned long  *"
+%typemap(imtype) long long *                "long long *"
+%typemap(imtype) unsigned long long *       "unsigned long long  *"
+%typemap(imtype) float *                    "float *"
+%typemap(imtype) double *                   "double *"
+%typemap(imtype) size_t *                   "size_t *"
 
-%typemap(imtype) bool[],
-                 unsigned char[],
-                 short[],
-                 unsigned short[],
-                 int[],
-                 unsigned int[],
-                 long unsigned long[],
-                 long long[],
-                 unsigned long long[],
-                 float[],
-                 double[],
-                 size_t[] 
-"$*1_type *"
+// Pointers to primitive types are treated as pointers in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) const char *               "const char *"
+%typemap(imtype) const signed char *        "const signed char *"
+%typemap(imtype) const unsigned char *      "const unsigned char *"
+%typemap(imtype) const short *              "const short *"
+%typemap(imtype) const unsigned short *     "const unsigned short *"
+%typemap(imtype) const int *                "const int *"
+%typemap(imtype) const unsigned int *       "const unsigned int *"
+%typemap(imtype) const long *               "const long *"
+%typemap(imtype) const unsigned long *      "const unsigned long  *"
+%typemap(imtype) const long long *          "const long long *"
+%typemap(imtype) const unsigned long long * "const unsigned long long  *"
+%typemap(imtype) const float *              "const float *"
+%typemap(imtype) const double *             "const double *"
+%typemap(imtype) const size_t *             "const size_t *"
 
-%typemap(imtype) bool[ANY],
-                 unsigned char[ANY],
-                 short[ANY],
-                 unsigned short[ANY],
-                 int[ANY],
-                 unsigned int[ANY],
-                 long unsigned long[ANY],
-                 long long[ANY],
-                 unsigned long long[ANY],
-                 float[ANY],
-                 double[ANY],
-                 size_t[ANY] 
-"$*1_type *"
+// Arrays of primitive types are treated as arrays in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) char []                     "char *"
+%typemap(imtype) signed char []              "signed char *"
+%typemap(imtype) unsigned char []            "unsigned char *"
+%typemap(imtype) short []                    "short *"
+%typemap(imtype) unsigned short []           "unsigned short *"
+%typemap(imtype) int []                      "int *"
+%typemap(imtype) unsigned int []             "unsigned int *"
+%typemap(imtype) long []                     "long *"
+%typemap(imtype) unsigned long []            "unsigned long  *"
+%typemap(imtype) long long []                "long long *"
+%typemap(imtype) unsigned long long []       "unsigned long long  *"
+%typemap(imtype) float []                    "float *"
+%typemap(imtype) double []                   "double *"
+%typemap(imtype) size_t []                   "size_t *"
+
+// Arrays of primitive types are treated as arrays in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) const char []               "const char *"
+%typemap(imtype) const signed char []        "const signed char *"
+%typemap(imtype) const unsigned char []      "const unsigned char *"
+%typemap(imtype) const short []              "const short *"
+%typemap(imtype) const unsigned short []     "const unsigned short *"
+%typemap(imtype) const int []                "const int *"
+%typemap(imtype) const unsigned int []       "const unsigned int *"
+%typemap(imtype) const long []               "const long *"
+%typemap(imtype) const unsigned long []      "const unsigned long  *"
+%typemap(imtype) const long long []          "const long long *"
+%typemap(imtype) const unsigned long long [] "const unsigned long long  *"
+%typemap(imtype) const float []              "const float *"
+%typemap(imtype) const double []             "const double *"
+%typemap(imtype) const size_t []             "const size_t *"
+
+// Arrays of primitive types are treated as arrays in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) char [ANY]                     "char *"
+%typemap(imtype) signed char [ANY]              "signed char *"
+%typemap(imtype) unsigned char [ANY]            "unsigned char *"
+%typemap(imtype) short [ANY]                    "short *"
+%typemap(imtype) unsigned short [ANY]           "unsigned short *"
+%typemap(imtype) int [ANY]                      "int *"
+%typemap(imtype) unsigned int [ANY]             "unsigned int *"
+%typemap(imtype) long [ANY]                     "long *"
+%typemap(imtype) unsigned long [ANY]            "unsigned long  *"
+%typemap(imtype) long long [ANY]                "long long *"
+%typemap(imtype) unsigned long long [ANY]       "unsigned long long  *"
+%typemap(imtype) float [ANY]                    "float *"
+%typemap(imtype) double [ANY]                   "double *"
+%typemap(imtype) size_t [ANY]                   "size_t *"
+
+// Arrays of primitive types are treated as arrays in the wrapper(ObjectiveC++) layer.
+%typemap(imtype) const char [ANY]               "const char *"
+%typemap(imtype) const signed char [ANY]        "const signed char *"
+%typemap(imtype) const unsigned char [ANY]      "const unsigned char *"
+%typemap(imtype) const short [ANY]              "const short *"
+%typemap(imtype) const unsigned short [ANY]     "const unsigned short *"
+%typemap(imtype) const int [ANY]                "const int *"
+%typemap(imtype) const unsigned int [ANY]       "const unsigned int *"
+%typemap(imtype) const long [ANY]               "const long *"
+%typemap(imtype) const unsigned long [ANY]      "const unsigned long  *"
+%typemap(imtype) const long long [ANY]          "const long long *"
+%typemap(imtype) const unsigned long long [ANY] "const unsigned long long  *"
+%typemap(imtype) const float [ANY]              "const float *"
+%typemap(imtype) const double [ANY]             "const double *"
+%typemap(imtype) const size_t [ANY]             "const size_t *"
+
 
 // Booleans
 %typemap(imtype) bool               					"BOOL"
@@ -406,54 +461,114 @@ ADD_NAMESPACE_PREFIX()
 %typemap(objctype) const double &             "const double *"
 %typemap(objctype) const size_t &             "const size_t *"
 
+// Pointers will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) bool *                     "BOOL *"
+%typemap(objctype) char *                     "char *"
+%typemap(objctype) signed char *              "signed char *"
+%typemap(objctype) unsigned char *            "unsigned char *"
+%typemap(objctype) short *                    "short *"
+%typemap(objctype) unsigned short *           "unsigned short *"
+%typemap(objctype) int *                      "int *"
+%typemap(objctype) unsigned int *             "unsigned int *"
+%typemap(objctype) long *                     "long *"
+%typemap(objctype) unsigned long *            "unsigned long  *"
+%typemap(objctype) long long *                "long long *"
+%typemap(objctype) unsigned long long *       "unsigned long long  *"
+%typemap(objctype) float *                    "float *"
+%typemap(objctype) double *                   "double *"
+%typemap(objctype) size_t *                   "size_t *"
+
+// Pointers will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) const bool *               "const BOOL *"
+%typemap(objctype) const char *               "const char *"
+%typemap(objctype) const signed char *        "const signed char *"
+%typemap(objctype) const unsigned char *      "const unsigned char *"
+%typemap(objctype) const short *              "const short *"
+%typemap(objctype) const unsigned short *     "const unsigned short *"
+%typemap(objctype) const int *                "const int *"
+%typemap(objctype) const unsigned int *       "const unsigned int *"
+%typemap(objctype) const long *               "const long *"
+%typemap(objctype) const unsigned long *      "const unsigned long  *"
+%typemap(objctype) const long long *          "const long long *"
+%typemap(objctype) const unsigned long long * "const unsigned long long  *"
+%typemap(objctype) const float *              "const float *"
+%typemap(objctype) const double *             "const double *"
+%typemap(objctype) const size_t *             "const size_t *"
+
+// Arrays will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) bool []                     "BOOL *"
+%typemap(objctype) char []                     "char *"
+%typemap(objctype) signed char []              "signed char *"
+%typemap(objctype) unsigned char []            "unsigned char *"
+%typemap(objctype) short []                    "short *"
+%typemap(objctype) unsigned short []           "unsigned short *"
+%typemap(objctype) int []                      "int *"
+%typemap(objctype) unsigned int []             "unsigned int *"
+%typemap(objctype) long []                     "long *"
+%typemap(objctype) unsigned long []            "unsigned long  *"
+%typemap(objctype) long long []                "long long *"
+%typemap(objctype) unsigned long long []       "unsigned long long  *"
+%typemap(objctype) float []                    "float *"
+%typemap(objctype) double []                   "double *"
+%typemap(objctype) size_t []                   "size_t *"
+
+// Arrays will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) const bool []               "const BOOL *"
+%typemap(objctype) const char []               "const char *"
+%typemap(objctype) const signed char []        "const signed char *"
+%typemap(objctype) const unsigned char []      "const unsigned char *"
+%typemap(objctype) const short []              "const short *"
+%typemap(objctype) const unsigned short []     "const unsigned short *"
+%typemap(objctype) const int []                "const int *"
+%typemap(objctype) const unsigned int []       "const unsigned int *"
+%typemap(objctype) const long []               "const long *"
+%typemap(objctype) const unsigned long []      "const unsigned long  *"
+%typemap(objctype) const long long []          "const long long *"
+%typemap(objctype) const unsigned long long [] "const unsigned long long  *"
+%typemap(objctype) const float []              "const float *"
+%typemap(objctype) const double []             "const double *"
+%typemap(objctype) const size_t []             "const size_t *"
+
+// Arrays will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) bool [ANY]                     "BOOL *"
+%typemap(objctype) char [ANY]                     "char *"
+%typemap(objctype) signed char [ANY]              "signed char *"
+%typemap(objctype) unsigned char [ANY]            "unsigned char *"
+%typemap(objctype) short [ANY]                    "short *"
+%typemap(objctype) unsigned short [ANY]           "unsigned short *"
+%typemap(objctype) int [ANY]                      "int *"
+%typemap(objctype) unsigned int [ANY]             "unsigned int *"
+%typemap(objctype) long [ANY]                     "long *"
+%typemap(objctype) unsigned long [ANY]            "unsigned long  *"
+%typemap(objctype) long long [ANY]                "long long *"
+%typemap(objctype) unsigned long long [ANY]       "unsigned long long  *"
+%typemap(objctype) float [ANY]                    "float *"
+%typemap(objctype) double [ANY]                   "double *"
+%typemap(objctype) size_t [ANY]                   "size_t *"
+
+// Arrays will always be treated as pointers in the proxy layer (ObjectiveC)
+%typemap(objctype) const bool [ANY]               "const BOOL *"
+%typemap(objctype) const char [ANY]               "const char *"
+%typemap(objctype) const signed char [ANY]        "const signed char *"
+%typemap(objctype) const unsigned char [ANY]      "const unsigned char *"
+%typemap(objctype) const short [ANY]              "const short *"
+%typemap(objctype) const unsigned short [ANY]     "const unsigned short *"
+%typemap(objctype) const int [ANY]                "const int *"
+%typemap(objctype) const unsigned int [ANY]       "const unsigned int *"
+%typemap(objctype) const long [ANY]               "const long *"
+%typemap(objctype) const unsigned long [ANY]      "const unsigned long  *"
+%typemap(objctype) const long long [ANY]          "const long long *"
+%typemap(objctype) const unsigned long long [ANY] "const unsigned long long  *"
+%typemap(objctype) const float [ANY]              "const float *"
+%typemap(objctype) const double [ANY]             "const double *"
+%typemap(objctype) const size_t [ANY]             "const size_t *"
+
 //C strings:
 %typemap(objctype) char *, const char *, char *&, char[ANY], char[]    "NSString *"
 
 // Objects will always be treated as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
 %typemap(objcclasstype) SWIGTYPE                        "$objcclassname"
-
-%typemap(objctype) bool*,
-                   unsigned char*,
-                   short*,
-                   unsigned short*,
-                   int*,
-                   unsigned int*,
-                   long unsigned long*,
-                   long long*,
-                   unsigned long long*,
-                   float*,
-                   double*,
-                   size_t*
-"$1_type"
-
-%typemap(objctype) bool[],
-                   unsigned char[],
-                   short[],
-                   unsigned short[],
-                   int[],
-                   unsigned int[],
-                   long unsigned long[],
-                   long long[],
-                   unsigned long long[],
-                   float[],
-                   double[],
-                   size_t[]
-"$*1_type *"
-
-%typemap(objctype) bool[ANY],
-                   unsigned char[ANY],
-                   short[ANY],
-                   unsigned short[ANY],
-                   int[ANY],
-                   unsigned int[ANY],
-                   long unsigned long[ANY],
-                   long long[ANY],
-                   unsigned long long[ANY],
-                   float[ANY],
-                   double[ANY],
-                   size_t[ANY]
-"$*1_type *"
 
 // C/C++ Pointers are treated as  as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE *                           "$objcclassname*"
@@ -531,18 +646,18 @@ ADD_NAMESPACE_PREFIX()
              const float *,             float *,
              const double *,            double *,
              const size_t *,            size_t *,
-             bool[],
-             unsigned char[],
-             short[],
-             unsigned short[],
-             int[],
-             unsigned int[],
-             long unsigned long[],
-             long long[],
-             unsigned long long[],
-             float[],
-             double[],
-             size_t[]
+             bool[], bool[ANY],
+             unsigned char[], unsigned char[ANY],
+             short[], short[ANY],
+             unsigned short[], unsigned short[ANY],
+             int[], int[ANY],
+             unsigned int[], unsigned int[ANY],
+             long unsigned long[], long unsigned long[ANY],
+             long long[], long long[ANY],
+             unsigned long long[], unsigned long long[ANY],
+             float[], float[ANY],
+             double[], double[ANY],
+             size_t[], size_t[ANY]
 "$objcinput"
 
 //C strings:
@@ -618,18 +733,18 @@ ADD_NAMESPACE_PREFIX()
              const float *,             float *,
              const double *,            double *,
              const size_t *,            size_t *,
-             bool[],
-             unsigned char[],
-             short[],
-             unsigned short[],
-             int[],
-             unsigned int[],
-             long unsigned long[],
-             long long[],
-             unsigned long long[],
-             float[],
-             double[],
-             size_t[]
+             bool[], bool[ANY],
+             unsigned char[], unsigned char[ANY],
+             short[], short[ANY],
+             unsigned short[], unsigned short[ANY],
+             int[], int[ANY],
+             unsigned int[], unsigned int[ANY],
+             long unsigned long[], long unsigned long[ANY],
+             long long[], long long[ANY],
+             unsigned long long[], unsigned long long[ANY],
+             float[], float[ANY],
+             double[], double[ANY],
+             size_t[], size_t[ANY]
 %{ return $imcall; %}
 
 // C strings: 
