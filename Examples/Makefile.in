@@ -82,10 +82,9 @@ RUNPIPE=
 RUNME = runme
 
 IWRAP      = $(INTERFACE:.i=_wrap.i)
-IPROXYSRCS = $(INTERFACE:.i=_proxy.c)
 ISRCS      = $(IWRAP:.i=.c)
 ICXXSRCS   = $(IWRAP:.i=.cxx)
-IOBJS      = $(IWRAP:.i=.o) $(IPROXYSRCS:.c=.o)
+IOBJS      = $(IWRAP:.i=.@OBJEXT@)
 
 ##################################################################
 # Some options for silent output
