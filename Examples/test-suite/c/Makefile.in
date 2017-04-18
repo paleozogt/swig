@@ -6,11 +6,10 @@ LANGUAGE     = c
 C            = gcc
 CXX          = g++
 SCRIPTSUFFIX = _runme.c
-srcdir       = @srcdir@
-top_srcdir   = @top_srcdir@/..
-top_builddir = @top_builddir@/..
 
-include $(srcdir)/../common.mk
+srcdir       = @srcdir@
+top_srcdir   = ../@top_srcdir@
+top_builddir = ../@top_builddir@
 
 CPP_TEST_CASES += \
 				 cpp_basic_class \
@@ -27,6 +26,11 @@ CPP_TEST_CASES += \
 				 cpp_basic_template_class \
 				 c_backend_cpp_natural_std_string \
 				 c_backend_cpp_exception
+
+include $(srcdir)/../common.mk
+
+# Overridden variables here
+SRCDIR       = ../$(srcdir)/
 
 #
 # BROKEN TEST CASES:

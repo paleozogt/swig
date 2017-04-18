@@ -1783,21 +1783,23 @@ scilab_clean:
 # ----------------------------------------------------------------
 
 CLIBPREFIX = lib
-C_LDSHARED = @C_LDSHARED@
-CXX_LDSHARED = @CXX_LDSHARED@
-C_SO = @C_SO@
+C_LDSHARED = cc -dynamiclib
+CXX_LDSHARED = g++ -dynamiclib
+C_SO = .dylib
+IPROXYSRCS = $(INTERFACE:.i=_proxy.c)
+IPROXYOBJS = $(INTERFACE:.i=_proxy.o)
 
 c: $(SRCS)
 	$(SWIG) -c $(SWIGOPT) $(INTERFACEPATH)
 	$(CC) -c $(CCSHARED) $(CFLAGS) $(ISRCS) $(SRCS) $(INCLUDES)
 	$(CC) -c $(CCSHARED) $(CFLAGS) $(IPROXYSRCS) $(INCLUDES)
-	$(C_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(LIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
+	$(C_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(IPROXYOBJS) $(LIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
 	
 c_cpp: $(SRCS)
 	$(SWIG) -c++ -c $(SWIGOPT) $(INTERFACEPATH)
 	$(CXX) -c $(CCSHARED) $(CXXFLAGS) $(ICXXSRCS) $(SRCS) $(CXXSRCS) $(INCLUDES)
 	$(CC) -c $(CCSHARED) $(CFLAGS) $(IPROXYSRCS) $(INCLUDES)
-	$(CXX_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(LIBS) $(CPP_DLLIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
+	$(CXX_LDSHARED) $(CFLAGS) $(OBJS) $(IOBJS) $(IPROXYOBJS) $(LIBS) $(CPP_DLLIBS) -o $(CLIBPREFIX)$(TARGET)$(C_SO)
 
 c_compile: $(RUNME) $(PROXY)
 	$(CC) $(RUNME) $(PROXY) -L. -l$(TARGET) -o $(RUNME:.c=)
