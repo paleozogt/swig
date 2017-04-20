@@ -28,7 +28,7 @@
  *
  */
 %typemap(objcconstructor) SWIGTYPE %{
-    return [super initWithCptr:$imcall swigOwnCObject:YES];
+    return [self initWithCptr:$imcall swigOwnCObject:YES];
 %}
 
 %typemap(objcdestructor, methodname="dealloc", methodmodifiers="public") SWIGTYPE %{
