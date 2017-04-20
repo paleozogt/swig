@@ -28,12 +28,7 @@
  *
  */
 %typemap(objcconstructor) SWIGTYPE %{
-	if((self = [super init])) {
-		void* cptr = $imcall;
-        swigCPtr = cptr;
-        swigCMemOwn = YES;
-	}
-	return self;
+    return [super initWithCptr:$imcall swigOwnCObject:YES];
 %}
 
 %typemap(objcdestructor, methodname="dealloc", methodmodifiers="public") SWIGTYPE %{
