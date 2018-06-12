@@ -1916,6 +1916,12 @@ void OBJECTIVEC::marshalOutput(Node *n, String *actioncode, Wrapper *wrapper) {
   String *tm;
   if ((tm = Swig_typemap_lookup_out("out", n, "result", wrapper, actioncode))) {
     Replaceall(tm, "$result", "imresult");
+
+    if (GetFlag(n, "feature:new"))
+      Replaceall(tm, "$owner", "1");
+    else
+      Replaceall(tm, "$owner", "0");
+
     Printf(wrapper->code, "%s", tm);
     if (Len(tm))
       Printf(wrapper->code, "\n");

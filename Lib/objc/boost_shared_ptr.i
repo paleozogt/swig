@@ -24,8 +24,8 @@
 %typemap(in) CONST TYPE ($&1_type argp = 0) %{
   argp = (*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$input) ? (*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$input)->get() : 0;
   if (!argp) {
-    SWIG_ObjcThrowException(jenv, SWIG_ObjcNullPointerException, "Attempt to dereference nil $1_type");
-    return $nil;
+    SWIG_ObjcThrowException(SWIG_ObjcNullPointerException, "Attempt to dereference nil $1_type");
+    return $null;
   }
   $1 = *argp; %}
 %typemap(out) CONST TYPE 
@@ -43,8 +43,8 @@
 %typemap(in) CONST TYPE & %{
   $1 = ($1_ltype)((*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$input) ? (*(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$input)->get() : 0);
   if (!$1) {
-    SWIG_ObjcThrowException(jenv, SWIG_ObjcNullPointerException, "$1_type reference is nil");
-    return $nil;
+    SWIG_ObjcThrowException(SWIG_ObjcNullPointerException, "$1_type reference is nil");
+    return $null;
   } %}
 %typemap(out, fragment="SWIG_null_deleter") CONST TYPE &
 %{ *(SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > **)&$result = new SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE >($1 SWIG_NO_NULL_DELETER_$owner); %}
