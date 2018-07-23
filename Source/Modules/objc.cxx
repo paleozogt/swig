@@ -951,15 +951,6 @@ int OBJECTIVEC::functionWrapper(Node *n) {
   bool is_constant = (Cmp(nodeType(n), "constant") == 0);
   String *overloaded_name = getOverloadedName(n);
 
-  if (Getattr(n, "sym:overloaded") && global_func_flag) {
-    Node *over = Swig_symbol_isoverloaded(n);
-    if (over != n) {
-      Swig_warning(WARN_LANG_OVERLOAD_DECL, input_file, line_number, "Overloaded declaration ignored.  %s\n", Swig_name_decl(n));
-      Swig_warning(WARN_LANG_OVERLOAD_DECL, Getfile(over), Getline(over), "Previous declaration is %s\n", Swig_name_decl(over));
-      return SWIG_NOWRAP;
-    }
-  }
-
   if (!Getattr(n, "sym:overloaded")) {
     if (!addSymbol(Getattr(n, "sym:name"), n))
       return SWIG_ERROR;
