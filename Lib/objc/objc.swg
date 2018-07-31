@@ -174,7 +174,7 @@ ADD_NAMESPACE_PREFIX()
 %typemap(imtype) const bool &, bool &, const bool *, bool *             "BOOL *"
 
 //C strings:
-%typemap(imtype) char *, const char *, char[ANY], char[]              "NSString *"
+%typemap(imtype) char *, const char *, char[ANY], const char[ANY], char[], const char[]              "NSString *"
 %typemap(imtype) char *&                                "NSString *"
 
 // Objects will always be treated as pointers in ObjectiveC++
@@ -564,7 +564,7 @@ ADD_NAMESPACE_PREFIX()
 %typemap(objctype) const size_t [ANY]             "const size_t *"
 
 //C strings:
-%typemap(objctype) char *, const char *, char *&, char[ANY], char[]    "NSString *"
+%typemap(objctype) char *, const char *, char *&, char[ANY], const char[ANY], char[], const char[]    "NSString *"
 
 // Objects will always be treated as pointers in ObjectiveC
 %typemap(objctype) SWIGTYPE                             "$objcclassname*"
