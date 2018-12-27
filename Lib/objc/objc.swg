@@ -786,7 +786,7 @@ ADD_NAMESPACE_PREFIX()
 %{   void* cPtr = $imcall;
      $objcclassname* ret = nil;
      if(cPtr) {
-        ret = [[[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:NO] autorelease];
+        ret = [[[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:$owner] autorelease];
      }
     return ret; %}
     

@@ -1192,6 +1192,10 @@ void OBJECTIVEC::emitProxyGlobalFunctions(Node *n) {
   if ((tm = Swig_typemap_lookup("objcout", n, "", 0))) {
     substituteClassname(tm, type);
     Replaceall(tm, "$imcall", imcall);
+    if (GetFlag(n, "feature:new"))
+      Replaceall(tm, "$owner", "YES");
+    else
+      Replaceall(tm, "$owner", "NO");
   } else {
     Swig_warning(WARN_OBJC_TYPEMAP_OBJCOUT_UNDEF, input_file, line_number, "No objcout typemap defined for %s\n", crettype);
   }
@@ -1352,6 +1356,10 @@ void OBJECTIVEC::emitProxyClassFunction(Node *n) {
   if ((tm = Swig_typemap_lookup("objcout", n, "", 0))) {
     substituteClassname(tm, type);
     Replaceall(tm, "$imcall", imcall);
+    if (GetFlag(n, "feature:new"))
+      Replaceall(tm, "$owner", "YES");
+    else
+      Replaceall(tm, "$owner", "NO");
   } else {
     Swig_warning(WARN_OBJC_TYPEMAP_OBJCOUT_UNDEF, input_file, line_number, "No objcout typemap defined for %s\n", crettype);
   }
