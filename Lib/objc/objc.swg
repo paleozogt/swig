@@ -786,7 +786,12 @@ ADD_NAMESPACE_PREFIX()
 %{   void* cPtr = $imcall;
      $objcclassname* ret = nil;
      if(cPtr) {
-        ret = [[[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:$owner] autorelease];
+        ret = [[$objcclassname alloc] initWithCptr:cPtr swigOwnCObject:$owner];
+
+        NSString *selname = NSStringFromSelector(_cmd);
+        if (![selname hasPrefix:@"new"] && ![selname hasPrefix:@"alloc"] && ![selname hasPrefix:@"init"]) {
+            ret = [ret autorelease];
+        }
      }
     return ret; %}
     
