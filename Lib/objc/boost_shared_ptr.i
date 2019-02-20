@@ -109,19 +109,55 @@
 
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    $typemap(objcclasstype, TYPE) *ret = nil;
+    if(cPtr) {
+        ret = [[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES];
+
+        NSString *selname = NSStringFromSelector(_cmd);
+        if (![selname hasPrefix:@"new"] && ![selname hasPrefix:@"alloc"] && ![selname hasPrefix:@"init"]) {
+            ret = [ret autorelease];
+        }
+    }
+    return ret;
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > & {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    $typemap(objcclasstype, TYPE) *ret = nil;
+    if(cPtr) {
+        ret = [[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES];
+
+        NSString *selname = NSStringFromSelector(_cmd);
+        if (![selname hasPrefix:@"new"] && ![selname hasPrefix:@"alloc"] && ![selname hasPrefix:@"init"]) {
+            ret = [ret autorelease];
+        }
+    }
+    return ret;
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > * {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    $typemap(objcclasstype, TYPE) *ret = nil;
+    if(cPtr) {
+        ret = [[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES];
+
+        NSString *selname = NSStringFromSelector(_cmd);
+        if (![selname hasPrefix:@"new"] && ![selname hasPrefix:@"alloc"] && ![selname hasPrefix:@"init"]) {
+            ret = [ret autorelease];
+        }
+    }
+    return ret;
   }
 %typemap(objcout) SWIG_SHARED_PTR_QNAMESPACE::shared_ptr< CONST TYPE > *& {
     void* cPtr = $imcall;
-    return (cPtr == 0) ? nil : [[[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES] autorelease];
+    $typemap(objcclasstype, TYPE) *ret = nil;
+    if(cPtr) {
+        ret = [[$typemap(objcclasstype, TYPE) alloc] initWithCptr:cPtr swigOwnCObject:YES];
+
+        NSString *selname = NSStringFromSelector(_cmd);
+        if (![selname hasPrefix:@"new"] && ![selname hasPrefix:@"alloc"] && ![selname hasPrefix:@"init"]) {
+            ret = [ret autorelease];
+        }
+    }
+    return ret;
   }
 
 
